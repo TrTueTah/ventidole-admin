@@ -1,0 +1,39 @@
+@layer components {
+  .icon-button-change-info {
+    @apply px-[18px] flex gap-2 my-2 justify-start #{!important};
+  }
+
+  .calendar-btn {
+    @apply px-0 #{!important};
+  }
+
+  .filter-month-btn {
+    @apply px-4 py-1 hover:rounded-[100px] #{!important};
+  }
+
+  .ventidole__icon-button {
+    display: flex;
+    column-gap: 6px;
+    padding: 2px 4px;
+
+    .ant-btn-icon {
+      margin-inline-end: 0 !important;
+    }
+
+    &:hover {
+      color: unset;
+    }
+  }
+
+  .ventidole__view-more-button {
+    @apply px-4 py-[7px] bg-ventidole-secondary-950 border-none flex gap-1 text-white font-medium text-sm rounded-full h-[34px] #{!important};
+  }
+
+  .ventidole__create-button {
+    @apply h-[34px] self-start text-sm font-medium px-4 bg-ventidole-secondary-950 text-white hover:text-white border-none hover:bg-ventidole-secondary-800 #{!important};
+  }
+
+  .ventidole__reply-button {
+    @apply border-none p-0 text-ventidole-neutral-80 hover:text-ventidole-secondary-500 #{!important};
+  }
+}

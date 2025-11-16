@@ -1,0 +1,146 @@
+.ant-input {
+  @apply px-4;
+}
+
+.ant-form-item-label > label {
+  @apply h-10 min-w-[108px] font-medium text-ventidole-neutral-100 #{!important};
+  &:after {
+    display: none;
+  }
+}
+
+.ant-form-item-row {
+  @apply gap-4;
+}
+
+.ventidole-label-vertical .ant-form-item-row {
+  @apply gap-1 #{!important};
+  .ant-form-item-label {
+    @apply p-0 #{!important};
+  }
+  .ant-form-item-label > label {
+    @apply h-4  #{!important};
+  }
+}
+
+.ventidole-input-search-filter {
+  @apply h-[34px] #{!important};
+  .ant-input {
+    @apply self-center #{!important};
+  }
+}
+
+.ventidole-input-search-filter > .ant-input {
+  @apply h-6 #{!important};
+}
+
+.ant-input-affix-wrapper-disabled {
+  @apply border-none text-ventidole-neutral-80 #{!important};
+}
+
+.ant-input-affix-wrapper-input-with-clear-btn > .ant-input-suffix > div {
+  @apply mt-1;
+}
+
+.ventidole-input-search-filter-large {
+  @apply h-10 #{!important};
+  .ant-input {
+    @apply #{!important};
+  }
+  .ant-input-suffix > div {
+    @apply mt-[6px];
+  }
+}
+
+.ventidole-label-hide-required > div > div > .ant-form-item-required::before {
+  @apply hidden #{!important};
+}
+
+label {
+  &[for='accessRights'] {
+    @apply pb-4 #{!important};
+  }
+}
+
+.ant-form-item-required {
+  @apply flex-row-reverse;
+  justify-content: start;
+}
+
+.ant-form-item-control {
+  @apply content-center;
+}
+
+.ant-form-item-required::before {
+  @apply ml-1;
+}
+
+.ventidole-address-search {
+  @apply h-10 #{!important};
+  .ant-input-affix-wrapper {
+    @apply h-10 #{!important};
+  }
+}
+
+.ventidole-form-checkbox-group-full {
+  @apply py-2 #{!important};
+  .ant-form-item-label > label {
+    @apply pb-5 #{!important};
+  }
+}
+
+.ventidole-label-form {
+  @apply text-ventidole-neutral-100 font-medium min-w-[108px] self-start md:self-center h-6 md:h-10 mr-4 #{!important};
+}
+
+.input-incentive > span {
+  @apply self-start h-6 #{!important};
+}
+
+.ventidole-input-form {
+  @apply px-4 py-0 #{!important};
+}
+
+.ventidole-text-area-form {
+  @apply px-4 py-0 #{!important};
+  .ant-input {
+    @apply px-0 #{!important};
+  }
+}
+
+.ventidole-input-form-noti {
+  @apply px-2 py-0 h-[34px] #{!important};
+}
+
+.before-red-star::after {
+  display: inline-block;
+  margin-inline-start: 4px;
+  color: #ff4d4f;
+  font-size: 14px;
+  font-family: SimSun, sans-serif;
+  line-height: 1;
+  content: '*';
+}
+
+.input-money {
+  @apply h-10 #{!important};
+  .ant-input-number-input {
+    @apply h-10 #{!important};
+  }
+  .ant-input-number-handler-wrap {
+    @apply hidden #{!important};
+  }
+}
+
+.ventidole-input-number-antd {
+  @apply h-[34px] #{!important};
+  .ant-input-number-input {
+    @apply p-0 h-[34px] #{!important};
+  }
+}
+
+.ventidole-upload {
+  .ant-upload {
+    @apply w-full #{!important};
+  }
+}

@@ -1,0 +1,39 @@
+@layer components {
+  .ventidole-range-picker {
+    padding: 9px 15px;
+    max-width: 320px;
+    @apply border-ventidole-neutral-60 w-max;
+    input {
+      @apply text-sm font-normal text-ventidole-neutral-100 #{!important};
+      @apply text-center;
+    }
+    .anticon-close-circle {
+      @apply px-1;
+    }
+  }
+}
+.ant-picker-dropdown .ant-picker-panel-container .ant-picker-panels {
+  @apply max-md:flex-col;
+}
+
+.ant-picker-dropdown .ant-picker-week-panel .ant-picker-content colgroup col:first-child,
+.ant-picker-dropdown .ant-picker-week-panel .ant-picker-content thead > tr > th:first-child,
+.ant-picker-dropdown .ant-picker-week-panel .ant-picker-content tbody > tr > td:first-child {
+  display: none !important;
+  width: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+}
+
+.ant-picker-dropdown .ant-picker-week-panel 
+  .ant-picker-content tbody > tr.ant-picker-week-panel-row-selected 
+  td.ant-picker-cell-week + td .ant-picker-cell-inner {
+  border-top-left-radius: 12px;
+  border-bottom-left-radius: 12px;
+}
+
+.date-picker-input {
+  .ant-picker-input {
+    @apply text-ventidole-neutral-100 #{!important};
+  }
+}

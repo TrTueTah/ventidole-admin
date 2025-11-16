@@ -1,0 +1,17 @@
+@layer components {
+  .pack-bg-white-border-neutral-20 {
+    @apply bg-white border border-solid border-ventidole-neutral-30 rounded-10 #{!important};
+  }
+  .pack-border-neutral-40-bottom {
+    @apply border-0 border-ventidole-neutral-40 border-solid border-b;
+  }
+  .pack-border-neutral-40-left {
+    @apply border-0 border-ventidole-neutral-40 border-solid border-l;
+  }
+  .pack-border-right-bottom-neutral-40 {
+    @apply border-0 border-b border-r border-solid border-ventidole-neutral-40;
+  }
+  .ventidole__paper-form {
+    @apply p-4 md:p-10 border border-solid border-ventidole-neutral-30 rounded-10 bg-white flex flex-col;
+  }
+}

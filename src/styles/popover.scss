@@ -1,0 +1,14 @@
+.ant-popover-inner {
+  @apply rounded-10 border border-solid border-ventidole-neutral-40;
+}
+
+.ant-popover-inner {
+  @apply py-2 px-0 shadow-none #{!important};
+}
+
+.ventidole__comment-content:hover {
+  button {
+    opacity: 1;
+  }
+  @apply cursor-pointer;
+}

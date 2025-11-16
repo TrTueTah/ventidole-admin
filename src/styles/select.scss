@@ -1,0 +1,41 @@
+@layer components {
+  .select-hospital {
+    @apply self-center;
+    .ant-select-selector {
+      @apply gap-2 #{!important};
+    }
+    .ant-select-selection-item {
+      @apply text-sm text-ventidole-neutral-90 md:text-base font-medium #{!important};
+    }
+  }
+}
+
+.ant-select-disabled .ant-select-selector {
+  @apply border-none #{!important};
+}
+
+.ventidole-address-search {
+  .ant-select-selector {
+    @apply relative #{!important};
+  }
+  .ant-select-clear {
+    @apply absolute right-9 #{!important};
+  }
+
+  .ant-select-selection-search {
+    @apply w-[calc(100%-60px)] #{!important};
+  }
+}
+
+.ant-select-selection-item {
+  @apply text-ventidole-neutral-100 #{!important};
+}
+
+.ant-select-selector {
+  @apply px-4 #{!important};
+}
+
+.ant-select-dropdown {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}

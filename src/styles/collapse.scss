@@ -1,0 +1,8 @@
+@layer components {
+  .ventidole-collapse-table {
+    @apply border-0 border-b border-solid border-ventidole-secondary-200 rounded-none #{!important};
+    .ant-collapse-header {
+      @apply py-6 #{!important};
+    }
+  }
+}

@@ -1,0 +1,394 @@
+@layer components {
+  .ventidole-big-text-table {
+    .ant-table-thead > tr > th,
+    .ant-table-tbody > tr > td {
+      font-size: 15px !important;
+    }
+  }
+  .ventidole-summary-table {
+    .ant-table {
+      @apply w-full border border-solid border-ventidole-neutral-60 rounded-10 overflow-clip #{!important};
+    }
+
+    .ant-table-thead > tr > th:first-child {
+      @apply rounded-tl-10 #{!important};
+    }
+
+    .ant-table-thead > tr > th:last-child {
+      @apply rounded-tr-10 #{!important};
+    }
+
+    .ant-table-tbody > tr:last-child > td:first-child {
+      @apply rounded-bl-10 #{!important};
+    }
+
+    .ant-table-tbody > tr:last-child > td:last-child {
+      @apply rounded-br-10 #{!important};
+    }
+
+    .ant-table-thead > tr > th {
+      @apply bg-ventidole-secondary-700 text-ventidole-secondary-950 font-medium border-ventidole-neutral-40 #{!important};
+    }
+
+    .ant-table-cell::before {
+      @apply h-full bg-ventidole-neutral-40 #{!important};
+    }
+
+    .ant-table-tbody > tr > td {
+      @apply border-ventidole-neutral-40 border-solid border-t-0 border-l-0 border-r-0 border-b border-e #{!important};
+
+      &:last-child {
+        @apply border-e-0 #{!important};
+      }
+    }
+
+    .ant-table-tbody > tr:last-child > td {
+      @apply border-b-0 #{!important};
+    }
+
+    .ant-table-thead > tr > th {
+      @apply border-b-0 #{!important};
+    }
+
+    .ant-table-cell {
+      @apply py-3 text-base font-medium #{!important};
+    }
+
+    .ant-table-content {
+      @apply rounded-10 #{!important};
+    }
+  }
+
+  .ventidole-table {
+    .ant-table-expanded-row-fixed {
+      @apply px-0 py-[6px] overflow-x-hidden;
+    }
+
+    .title {
+      font-size: 18px;
+      font-weight: 600;
+      line-height: 28px;
+    }
+
+    .ant-table {
+      @apply border border-solid border-ventidole-neutral-40 rounded-10 overflow-clip #{!important};
+    }
+
+    .ant-table-thead > tr > th {
+      @apply py-[15.5px] font-semibold text-ventidole-neutral-80 bg-white;
+    }
+
+    .ant-table-thead > tr > th::before {
+      content: none !important;
+    }
+
+    .ant-table-tbody > tr > td {
+      @apply py-2 leading-8 text-sm text-ventidole-primary-950 border-b-0;
+    }
+
+    .ant-table-tbody > tr:nth-child(even) > td {
+      @apply bg-ventidole-secondary-700;
+    }
+
+    .ant-table-tbody > tr:nth-child(odd) > td {
+      @apply bg-white;
+    }
+
+    &.table-total {
+      .ant-table-tbody > tr > td {
+        @apply bg-white #{!important};
+      }
+
+      .ant-table-tbody > tr:last-child > td {
+        @apply bg-ventidole-secondary-700 #{!important};
+      }
+    }
+
+    &.table-horizontal {
+      .ant-table-tbody > tr > td {
+        @apply py-[14px];
+      }
+
+      .ant-table-thead > tr > th:first-child::before {
+        content: '' !important;
+      }
+
+      .ant-table-thead > tr > th:first-child::before {
+        @apply h-full bg-ventidole-neutral-40 #{!important};
+      }
+
+      .ant-table-tbody > tr.ant-table-row > td:first-child::before {
+        content: '';
+        @apply h-full bg-ventidole-neutral-40 block absolute right-0 w-px top-0 #{!important};
+      }
+
+      .ant-table-tbody > tr.ant-table-row > td:first-child {
+        @apply px-6 #{!important};
+      }
+    }
+
+    &.basic-statistics-table {
+      .ant-table-tbody > tr > td {
+        @apply py-2;
+      }
+    }
+  }
+
+  .ventidole-table-merge {
+    @apply border border-solid border-ventidole-neutral-40 rounded-10 overflow-clip #{!important};
+
+    .ant-table-thead > tr > th {
+      @apply font-semibold text-ventidole-neutral-80 #{!important};
+    }
+
+    .ant-table-thead > tr > th:last-child {
+      @apply border-e #{!important};
+    }
+
+    .ant-table-thead > tr {
+      .ant-table-cell-fix-left {
+        @apply border-e-0 #{!important};
+      }
+
+      .ant-table-cell::before {
+        content: none !important;
+      }
+    }
+
+    &.break-row-4 {
+      .ant-table-tbody > tr > td {
+        &[rowspan='4'] {
+          @apply border-b #{!important};
+        }
+      }
+
+      .ant-table-tbody > tr[data-row-key*='break_here'] {
+        .ant-table-cell {
+          @apply bg-ventidole-secondary-700 font-semibold border-ventidole-neutral-40 #{!important};
+        }
+      }
+    }
+
+    .ant-table-tbody > tr {
+      .ant-table-cell {
+        @apply border-b-0 #{!important};
+      }
+
+      &:last-child {
+        .ant-table-cell {
+          @apply border-b #{!important};
+        }
+      }
+
+      &[data-row-key*='break_here'] {
+        .ant-table-cell {
+          @apply border-b #{!important};
+        }
+      }
+
+      td.ant-table-cell-fix-left {
+        @apply border-b font-medium text-ventidole-primary-950 #{!important};
+      }
+    }
+  }
+
+  .main-header-table {
+    .ant-table-thead > tr > th {
+      @apply font-bold text-ventidole-secondary-500 #{!important};
+    }
+  }
+
+  .ventidole-table-no-row-color {
+    .title {
+      font-size: 18px;
+      font-weight: 600;
+      line-height: 28px;
+    }
+
+    .ant-table {
+      @apply border border-solid border-ventidole-neutral-40 rounded-10 overflow-clip #{!important};
+    }
+
+    .ant-table-thead > tr > th {
+      @apply py-3 font-medium text-ventidole-neutral-80 bg-ventidole-neutral-20;
+    }
+
+    .ant-table-thead > tr > th::before {
+      content: none !important;
+    }
+
+    .ant-table-tbody > tr > td {
+      @apply py-3 text-sm text-ventidole-neutral-100 border-b-0;
+    }
+
+    &.table-horizontal {
+      .ant-table-thead > tr > th:first-child::before {
+        content: '' !important;
+      }
+
+      .ant-table-thead > tr > th:first-child::before {
+        @apply h-full bg-ventidole-neutral-40 #{!important};
+      }
+
+      .ant-table-tbody > tr.ant-table-row > td:first-child::before {
+        content: '';
+        @apply h-full bg-ventidole-neutral-40 block absolute right-0 w-px top-0 #{!important};
+      }
+
+      .ant-table-tbody > tr.ant-table-row > td:first-child {
+        @apply px-6 #{!important};
+      }
+    }
+  }
+
+  .ventidole-input-table {
+    .ant-table-cell {
+      padding: 4px !important;
+    }
+  }
+
+  .highlight-row {
+    @apply bg-ventidole-secondary-700 font-semibold border-ventidole-neutral-40 #{!important};
+
+    .ant-table-cell {
+      @apply font-semibold #{!important};
+
+      span {
+        @apply text-ventidole-neutral-100 #{!important};
+      }
+    }
+  }
+
+  .title-row {
+    @apply bg-ventidole-secondary-700 font-medium border-ventidole-neutral-40 #{!important};
+
+    .ant-table-cell {
+      @apply font-medium text-ventidole-secondary-500 #{!important};
+
+      span {
+        @apply text-ventidole-secondary-500 #{!important};
+      }
+    }
+  }
+
+  .align-center-row {
+    .ant-table-cell {
+      @apply text-center #{!important};
+    }
+  }
+
+  .ventidole-group-table {
+    .ant-table {
+      @apply border border-solid border-ventidole-neutral-40 rounded-10 overflow-clip #{!important};
+    }
+
+    /* .ant-table-content {
+      @apply overflow-x-auto overflow-y-hidden #{!important};
+    } */
+
+    .ant-table-tbody > tr > td:last-child {
+      @apply border-e-[1px] #{!important};
+    }
+  }
+
+  .table-community {
+    .ant-table-tbody > tr > td {
+      @apply py-[19px];
+    }
+  }
+
+  .title-center {
+    thead > tr > th {
+      text-align: center !important;
+    }
+  }
+
+  .content-center {
+    tbody > tr > td {
+      text-align: center !important;
+    }
+  }
+
+  .ventidole-table-daily-comment {
+    .ant-table {
+      @apply border border-solid border-ventidole-neutral-40 rounded-10 overflow-clip #{!important};
+    }
+
+    .ant-table-thead > tr > th {
+      @apply py-4 text-sm font-medium text-ventidole-neutral-80 bg-white;
+    }
+
+    .ant-table-thead > tr > th::before {
+      content: none !important;
+    }
+
+    .ant-table-tbody > tr > td {
+      @apply py-3 text-sm text-ventidole-neutral-100 border-b-0;
+    }
+  }
+
+  .row-bg-purple {
+    background-color: #f9f8ff !important;
+    font-weight: 500 !important;
+  }
+
+  .ventidole-table-treatment-booking {
+    .ant-table-tbody > tr > td {
+      @apply py-0 leading-[20px];
+    }
+  }
+
+  .ventidole-table-order {
+    .ant-table-expanded-row-fixed {
+      @apply px-0 py-[14px] overflow-x-hidden;
+    }
+    .ant-table-tbody > tr > td {
+      @apply py-0 leading-[30px];
+    }
+    .ant-table-thead > tr > th {
+      @apply py-[2.5px];
+    }
+  }
+
+  .table-no-data {
+    .ant-table-cell {
+      @apply bg-white #{!important};
+    }
+  }
+
+  .ventidole-table-px-3-py-1 {
+    .ant-table-thead > tr > th {
+      @apply border-0 border-solid border-b border-ventidole-neutral-40 #{!important};
+    }
+    .ant-table-tbody > tr > td {
+      @apply px-3 py-1 #{!important};
+    }
+    .ant-table-measure-row {
+      @apply hidden #{!important};
+    }
+  }
+}
+
+/* .overflow-y-auto::-webkit-scrollbar,
+.overflow-x-auto::-webkit-scrollbar,
+.overflow-auto::-webkit-scrollbar,
+.ant-table-content::-webkit-scrollbar,
+.ant-table-body::-webkit-scrollbar {
+  @apply h-1.5 w-2 rounded-10;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb,
+.overflow-x-auto::-webkit-scrollbar-thumb,
+.overflow-auto::-webkit-scrollbar-thumb,
+.ant-table-content::-webkit-scrollbar-thumb,
+.ant-table-body::-webkit-scrollbar-thumb {
+  @apply bg-ventidole-neutral-40 rounded-10;
+}
+
+.overflow-y-auto::-webkit-scrollbar-track,
+.overflow-x-auto::-webkit-scrollbar-track,
+.overflow-auto::-webkit-scrollbar-track,
+.ant-table-content::-webkit-scrollbar-track,
+.ant-table-body::-webkit-scrollbar-track {
+  @apply bg-ventidole-neutral-20 rounded-10;
+} */

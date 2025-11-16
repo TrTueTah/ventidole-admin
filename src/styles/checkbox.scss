@@ -1,0 +1,7 @@
+.ant-checkbox-group {
+  @apply gap-y-[18px];
+}
+
+.ant-checkbox-disabled + span {
+  @apply text-ventidole-neutral-100 #{!important};
+}

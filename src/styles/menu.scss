@@ -1,0 +1,174 @@
+.ant-menu-submenu-arrow {
+  @apply text-white #{!important};
+}
+
+.ant-menu-title-content {
+  @apply text-ventidole-primary-200 font-medium #{!important};
+}
+
+.ant-menu-sub .ant-menu-item-selected .ant-menu-title-content {
+  @apply text-ventidole-secondary-950 #{!important};
+}
+
+.ant-menu-item-selected,
+.ant-menu-item-only-child {
+  @apply rounded-none m-0 w-full #{!important};
+}
+
+.ant-menu-vertical {
+  .ant-menu-item {
+    .ant-menu-title-content {
+      @apply text-white w-fit #{!important};
+    }
+  }
+}
+
+.ant-menu-inline {
+  @apply border-none #{!important};
+}
+
+.ant-menu-item-icon {
+  @apply w-6 h-6 #{!important};
+}
+
+.ant-menu-item {
+  @apply h-12 #{!important};
+}
+.ant-menu-submenu,
+.ant-menu-submenu-title,
+.ant-menu-item {
+  @apply rounded-none #{!important};
+}
+
+.ant-layout-sider {
+  @apply absolute lg:relative z-[100] bg-ventidole-main-color pt-2 #{!important};
+}
+
+.hidden-title {
+  ul > li > .ant-menu-title-content,
+  ul > li > .ant-menu-submenu-title > .ant-menu-title-content {
+    @apply hidden #{!important};
+  }
+}
+
+.side-bar-menu {
+  .ant-menu-inline-collapsed {
+    .ant-menu-item {
+      @apply flex items-center #{!important};
+    }
+    .ant-menu-submenu-title {
+      @apply flex items-center #{!important};
+    }
+  }
+
+  ul > .ant-menu-item:first-child {
+    @apply mt-0 #{!important};
+  }
+
+  ul > li > .ant-menu-title-content,
+  ul > li > .ant-menu-submenu-title > .ant-menu-title-content {
+    @apply pl-3 text-base #{!important};
+  }
+
+  ul > li > ul > li > .ant-menu-title-content,
+  ul > li > ul > li > .ant-menu-submenu-title > .ant-menu-title-content {
+    @apply h-full p-0 m-0 text-base flex items-center #{!important};
+  }
+
+  ul > li > ul {
+    .ant-menu-title-content {
+      @apply pl-4 #{!important};
+    }
+  }
+
+  & > div > ul {
+    @apply border-e-0 #{!important};
+  }
+  .ant-menu-item,
+  .ant-menu-submenu-title {
+    @apply m-0 p-0  w-full #{!important};
+  }
+
+  .ant-menu-item-only-child {
+    @apply mb-0 pl-[68px] h-12  #{!important};
+  }
+  .ant-menu-inline-collapsed .ant-menu-submenu-vertical:last-child .ant-menu-submenu-title {
+    @apply m-0 #{!important};
+  }
+
+  .ant-menu-submenu-inline:last-child .ant-menu-submenu-title {
+    @apply m-0 #{!important};
+  }
+}
+
+.ant-menu-submenu-title {
+  @apply h-14 #{!important};
+}
+
+.ant-menu-submenu {
+  .ant-menu-sub {
+    @apply bg-ventidole-secondary-900 #{!important};
+  }
+}
+
+.ant-menu {
+  .ant-menu-item-selected {
+    @apply bg-ventidole-main-color #{!important};
+    .ant-menu-title-content {
+      @apply font-bold #{!important};
+    }
+  }
+}
+
+.ant-menu-submenu-open {
+  .ant-menu-item-selected {
+    @apply bg-ventidole-sub-color #{!important};
+    .ant-menu-title-content {
+      @apply font-medium #{!important};
+    }
+  }
+}
+
+.ant-menu-item-selected {
+  .ant-menu-title-content {
+    @apply text-white #{!important};
+  }
+}
+
+.ant-menu-item-selected {
+  .ant-menu-title-content {
+    @apply text-white #{!important};
+  }
+}
+
+//TODO: Change arrow icon
+// https://stackoverflow.com/questions/55183591/change-arrow-icon-in-ant-design
+
+.ant-menu-submenu-disabled,
+.ant-menu-item-disabled {
+  @apply opacity-50;
+}
+
+.ant-menu-submenu-open {
+  .ant-menu-submenu-title {
+    .ant-menu-title-content {
+      @apply text-white font-bold #{!important};
+    }
+  }
+}
+
+.ant-layout-sider-collapsed {
+  @apply hidden lg:block #{!important};
+}
+
+.ant-menu-item {
+  @apply hover:bg-ventidole-primary-400 #{!important};
+}
+
+.ant-menu-title-content {
+  @apply hover:text-white #{!important};
+}
+
+.ant-menu-submenu-title {
+  @apply hover:bg-ventidole-primary-400 #{!important};
+}

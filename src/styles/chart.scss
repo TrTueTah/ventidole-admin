@@ -1,0 +1,67 @@
+.ventidole-checkbox-container {
+  position: relative;
+  margin-top: 2px;
+
+  input {
+    position: absolute;
+    opacity: 0;
+    height: 0;
+    width: 0;
+  }
+
+  .check {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 16px;
+    height: 16px;
+    background: #ccc;
+    cursor: pointer;
+    border-radius: 4px;
+
+    &:hover {
+      background: #bbb;
+    }
+  }
+
+  input:checked ~ .check {
+    background-color: #554970;
+    border-radius: 4px;
+  }
+
+  .check::after {
+    position: absolute;
+    content: '';
+    left: 5.5px;
+    top: 2px;
+    width: 4px;
+    height: 8px;
+    border-color: #fff;
+    border-style: solid;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg) scale(0.5);
+    opacity: 0;
+    transition: transform 0.1s linear;
+  }
+
+  input:checked ~ .check::after {
+    transition: transform 0.1s linear;
+    opacity: 1;
+    transform: rotate(45deg) scale(1);
+  }
+}
+
+.circle-dot-ventidole-legend {
+  @apply w-2 h-2 rounded-full inline-block my-auto ml-5 mr-1;
+}
+.ventidole-label-legend {
+  @apply text-ventidole-neutral-80 text-sm;
+}
+
+#ventidole-legend > div {
+  @apply flex w-40;
+}
+
+#ventidole-legend-bar-chart > div {
+  @apply flex ml-4 w-fit;
+}

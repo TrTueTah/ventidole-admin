@@ -1,0 +1,15 @@
+@layer components {
+  .ventidole-tabs-card {
+    .ant-tabs-nav-wrap {
+      @apply border-0 border-b border-solid border-ventidole-secondary-500 #{!important};
+    }
+
+    .ant-tabs-tab {
+      @apply bg-ventidole-secondary-200 text-ventidole-secondary-500 m-0 border-ventidole-secondary-500 border-b-0 #{!important};
+    }
+
+    .ant-tabs-tab-active {
+      @apply bg-white text-[#744FF5] m-0 border-ventidole-secondary-500 #{!important};
+    }
+  }
+}

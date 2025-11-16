@@ -1,0 +1,21 @@
+@layer components {
+  .ventidole-segmented {
+    width: 298px;
+    height: 40px;
+    .ant-segmented-group {
+      @apply gap-1;
+      margin: 2px;
+    }
+    .ant-segmented-item {
+      position: relative;
+      .ant-segmented-item-label {
+        padding: 2px 0;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 500;
+      }
+    }
+  }
+}

@@ -1,0 +1,11 @@
+.style-datepicker-shift {
+  border: none !important;
+  box-shadow: none !important;
+
+  .ant-picker-input {
+    input {
+      @apply text-black text-xl font-medium w-28 #{!important};
+    }
+    @apply text-center;
+  }
+}
