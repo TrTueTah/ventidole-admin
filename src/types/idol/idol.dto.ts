@@ -1,3 +1,5 @@
+import { CommunityDto } from '../community/community.dto';
+
 export type UserSummaryDto = {
   id: string;
   email: string;
@@ -7,26 +9,20 @@ export type UserSummaryDto = {
   createdAt: Date;
 };
 
-export type GroupSummaryDto = {
-  id: string;
-  groupName: string;
-  logoUrl?: string;
-};
-
 export type IdolDto = {
   id: string;
   stageName: string;
   avatarUrl?: string;
   backgroundUrl?: string;
   bio?: string;
-  groupId: string;
+  communityId: string;
   userId: string;
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
   version: number;
   user: UserSummaryDto;
-  group: GroupSummaryDto;
+  community: CommunityDto;
 };
 
 export type CreatedIdolDto = {
@@ -35,7 +31,7 @@ export type CreatedIdolDto = {
   avatarUrl?: string;
   backgroundUrl?: string;
   bio?: string;
-  groupId: string;
+  communityId: string;
   userId: string;
   isActive: boolean;
   createdAt: Date;

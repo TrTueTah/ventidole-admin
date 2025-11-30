@@ -8,5 +8,5 @@ export enum Path {
 
 export enum UserManagementPath {
   USER_LIST = 'user-list',
-  FAN_LIST = 'fan-list',
+  IDOL_LIST = 'idol-list',
 }

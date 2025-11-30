@@ -19,14 +19,14 @@ export const ENDPOINTS = {
   },
   IDOL: {
     _: Endpoint.IDOL,
-    get() {
-      return buildEndpoint(this._);
+    get(path?: string | number) {
+      return buildEndpoint(this._, path);
     },
   },
-  GROUP: {
-    _: Endpoint.GROUP,
-    get() {
-      return buildEndpoint(this._);
+  COMMUNITY: {
+    _: Endpoint.COMMUNITY,
+    get(path?: string | number) {
+      return buildEndpoint(this._, path);
     },
   },
   PRODUCT: {

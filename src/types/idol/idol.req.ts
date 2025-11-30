@@ -1,4 +1,4 @@
-import { PagingREQ } from "@/types/paging.type";
+import { PagingREQ } from '@/types/paging.type';
 
 export type IdolListREQ = {
   search?: string;
@@ -10,8 +10,17 @@ export type CreateIdolREQ = {
   email: string;
   password: string;
   stageName: string;
-  groupId: string;
+  communityId: string;
   avatarUrl?: string;
   backgroundUrl?: string;
   bio?: string;
-}
+};
+
+export type UpdateIdolREQ = {
+  stageName?: string;
+  communityId?: string;
+  avatarUrl?: string;
+  backgroundUrl?: string;
+  bio?: string;
+  isActive?: boolean;
+};

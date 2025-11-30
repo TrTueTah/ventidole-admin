@@ -71,8 +71,8 @@ const navItems: NavItem[] = [
         pro: false,
       },
       {
-        name: 'Fan List',
-        path: PATH.USER_MANAGEMENT.get('FAN_LIST'),
+        name: 'Idol List',
+        path: PATH.USER_MANAGEMENT.get('IDOL_LIST'),
         pro: false,
       },
     ],
