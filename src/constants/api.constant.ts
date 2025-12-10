@@ -17,8 +17,8 @@ export const ENDPOINTS = {
       return buildEndpoint(this._, this[key]);
     },
   },
-  IDOL: {
-    _: Endpoint.IDOL,
+  USER: {
+    _: Endpoint.USER,
     get(path?: string | number) {
       return buildEndpoint(this._, path);
     },

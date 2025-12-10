@@ -1,14 +1,14 @@
 export enum Endpoint {
-  AUTHENTICATION = 'admin/authentication',
-  IDOL = 'admin/idols',
+  AUTHENTICATION = 'auth',
+  USER = 'admin/user',
   PRODUCT = 'admin/products',
-  COMMUNITY = 'admin/communities',
+  COMMUNITY = 'admin/community',
   FILE = 'file',
 }
 
 export enum AuthenticationEndpoints {
-  LOGIN = 'login',
-  SIGN_UP = 'signup',
+  LOGIN = 'admin/sign-in',
+  SIGN_UP = 'admin/signup',
 }
 
 export enum FileEndpoints {

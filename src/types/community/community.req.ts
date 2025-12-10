@@ -1,7 +1,14 @@
-import { PagingREQ } from "@/types/paging.type";
+import { PagingREQ } from '@/types/paging.type';
 
-export type CommunityListREQ = {
+export enum CommunitySortBy {
+  CREATED_AT = 'createdAt',
+  UPDATED_AT = 'updatedAt',
+  NAME = 'name',
+}
+
+export type GetCommunitiesREQ = {
   search?: string;
-  sortBy?: string;
-  sortOrder?: string;
+  sortBy?: CommunitySortBy;
+  sortOrder?: 'asc' | 'desc';
+  isActive?: boolean;
 } & PagingREQ;

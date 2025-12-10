@@ -1,8 +1,8 @@
-import { Path, UserManagementPath } from '@/enums/path.enum';
+import { Path } from '@/enums/path.enum';
 
-const buildPath = (base: string, path?: string | number) => {
-  return path ? `/${base}/${path}` : `/${base}`;
-};
+// const buildPath = (base: string, path?: string | number) => {
+//   return path ? `/${base}/${path}` : `/${base}`;
+// };
 
 export const PATH = {
   MAIN: Path.MAIN,
@@ -14,9 +14,8 @@ export const PATH = {
   },
   USER_MANAGEMENT: {
     _: Path.USER_MANAGEMENT,
-    ...UserManagementPath,
-    get(key?: keyof typeof UserManagementPath) {
-      return buildPath(this._, key ? this[key] : '');
+    get() {
+      return `/${this._}`;
     },
   },
 };

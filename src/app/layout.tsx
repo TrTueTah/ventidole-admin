@@ -1,12 +1,14 @@
 import { Outfit } from 'next/font/google';
 import './globals.css';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import { QueryProvider } from '@/context/QueryProvider';
 import { SidebarProvider } from '@/context/SidebarContext';
 import { ThemeProvider } from '@/context/ThemeContext';
 
 const outfit = Outfit({
-  subsets: ["latin"],
+  subsets: ['latin'],
 });
 
 export default function RootLayout({
@@ -22,6 +24,7 @@ export default function RootLayout({
             <SidebarProvider>{children}</SidebarProvider>
           </ThemeProvider>
         </QueryProvider>
+        <ToastContainer position="bottom-right" />
       </body>
     </html>
   );

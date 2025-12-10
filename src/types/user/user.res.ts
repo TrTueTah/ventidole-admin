@@ -1,4 +1,4 @@
-import { CreatedIdolDto, IdolDto } from "./idol.dto";
+import { CreatedIdolDto, IdolDto } from './user.dto';
 
 export type IdolListRESP = IdolDto;
 

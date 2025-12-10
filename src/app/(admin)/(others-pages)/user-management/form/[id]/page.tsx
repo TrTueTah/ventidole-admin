@@ -3,29 +3,33 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
+import { toast } from 'react-toastify';
 import Button from '@/components/ui/button/Button';
 import Input from '@/components/form/input/InputField';
 import Label from '@/components/form/Label';
 import Select from '@/components/form/Select';
-import { getIdolByIdAPI, createIdolAPI, updateIdolAPI } from '@/api/idol.api';
-import { getCommunitiesAPI } from '@/api/community.api';
-import { uploadFileAPI } from '@/api/file.api';
-import { CreateIdolREQ, UpdateIdolREQ } from '@/types/idol/idol.req';
-import { IDOLS_QUERY_KEY } from '@/hooks/useIdolsQuery';
 import Image from 'next/image';
+import { CreateUserREQ } from '@/types/user/user.req';
+import { AccountRole } from '@/enums/role.enum';
+import { useUserQuery } from '@/hooks/useUserQuery';
+import { useCreateUser } from '@/hooks/useCreateUser';
+import { useCommunitiesQuery } from '@/hooks/useCommunitiesQuery';
+import { useUploadFile } from '@/hooks/useUploadFile';
+import { USERS_QUERY_KEY } from '@/hooks/useUsersQuery';
 
-export default function IdolForm() {
+export default function UserFormPage() {
   const params = useParams();
   const router = useRouter();
   const queryClient = useQueryClient();
-  const idolId = params.id as string;
-  const isCreateMode = idolId === 'create';
+  const userId = params.id as string;
+  const isCreateMode = userId === 'create';
 
-  const [formData, setFormData] = useState<CreateIdolREQ>({
-    stageName: '',
+  const [formData, setFormData] = useState<CreateUserREQ>({
+    username: '',
     email: '',
     password: '',
+    role: AccountRole.FAN,
     communityId: '',
     bio: '',
     avatarUrl: '',
@@ -38,57 +42,52 @@ export default function IdolForm() {
   const [backgroundPreview, setBackgroundPreview] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Fetch idol data for edit mode
-  const { data: idolData, isLoading: isLoadingIdol } = useQuery({
-    queryKey: ['idol', idolId],
-    queryFn: () => getIdolByIdAPI(idolId),
-    enabled: !isCreateMode && !!idolId,
-  });
+  // Use custom hooks
+  const { data: userData, isLoading: isLoadingUser } = useUserQuery(
+    userId,
+    !isCreateMode
+  );
 
-  // Fetch communities for the dropdown
-  const { data: communitiesData, isLoading: isLoadingCommunities } = useQuery({
-    queryKey: ['communities'],
-    queryFn: () => getCommunitiesAPI({ page: 1, limit: 100 }),
-  });
+  const { data: communitiesData, isLoading: isLoadingCommunities } =
+    useCommunitiesQuery({ page: 1, limit: 100 });
+
+  const uploadMutation = useUploadFile();
+  const createMutation = useCreateUser();
 
   const communities = communitiesData?.data || [];
   const communityOptions = communities.map((community) => ({
-    image: community.avatarUrl,
+    image: community.avatarUrl || undefined,
     value: community.id,
     label: community.name,
   }));
 
-  // Upload mutation
-  const uploadMutation = useMutation({
-    mutationFn: uploadFileAPI,
-  });
+  // Show community field only when role is IDOL
+  const shouldShowCommunity = formData.role === AccountRole.IDOL;
 
-  // Create/Update mutations
-  const createMutation = useMutation({
-    mutationFn: createIdolAPI,
-  });
-
-  const updateMutation = useMutation({
-    mutationFn: ({ id, data }: { id: string; data: UpdateIdolREQ }) =>
-      updateIdolAPI(id, data),
-  });
+  // Role options
+  const roleOptions = [
+    { value: AccountRole.FAN, label: 'Fan' },
+    { value: AccountRole.IDOL, label: 'Idol' },
+    { value: AccountRole.ADMIN, label: 'Admin' },
+  ];
 
   useEffect(() => {
-    if (!isCreateMode && idolData?.data) {
-      const idol = idolData.data;
+    if (!isCreateMode && userData?.data) {
+      const user = userData.data;
       setFormData({
-        stageName: idol.stageName,
-        email: idol.user.email,
+        username: user.username,
+        email: user.email,
         password: '',
-        communityId: idol.communityId,
-        bio: idol.bio || '',
-        avatarUrl: idol.avatarUrl,
-        backgroundUrl: idol.backgroundUrl,
+        role: user.role,
+        communityId: user.community?.id || '',
+        bio: user.bio || '',
+        avatarUrl: user.avatarUrl || '',
+        backgroundUrl: user.backgroundUrl || '',
       });
-      setAvatarPreview(idol.avatarUrl || '');
-      setBackgroundPreview(idol.backgroundUrl || '');
+      setAvatarPreview(user.avatarUrl || '');
+      setBackgroundPreview(user.backgroundUrl || '');
     }
-  }, [idolData, isCreateMode]);
+  }, [userData, isCreateMode]);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -101,10 +100,19 @@ export default function IdolForm() {
   };
 
   const handleSelectChange = (name: string, value: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      [name]: name === 'isActive' ? value === 'true' : value,
-    }));
+    setFormData((prev) => {
+      const newData = {
+        ...prev,
+        [name]: value,
+      };
+
+      // Clear communityId if role changes to FAN
+      if (name === 'role' && value === AccountRole.FAN) {
+        newData.communityId = '';
+      }
+
+      return newData;
+    });
   };
 
   const handleFileChange = (
@@ -127,7 +135,7 @@ export default function IdolForm() {
     const formData = new FormData();
     formData.append('file', file);
     formData.append('folder', folder);
-    formData.append('customFileName', `idol-${Date.now()}-${file.name}`);
+    formData.append('customFileName', `user-${Date.now()}-${file.name}`);
 
     const res = await uploadMutation.mutateAsync(formData);
     return res.data.url;
@@ -143,55 +151,48 @@ export default function IdolForm() {
 
       // Upload avatar if new file selected
       if (avatarFile) {
-        avatarUrl = await uploadSingleFile(avatarFile, 'idols');
+        avatarUrl = await uploadSingleFile(avatarFile, 'users');
       }
 
       // Upload background if new file selected
       if (backgroundFile) {
-        backgroundUrl = await uploadSingleFile(backgroundFile, 'idols');
+        backgroundUrl = await uploadSingleFile(backgroundFile, 'users');
       }
 
       if (isCreateMode) {
-        const createData: CreateIdolREQ = {
+        const createData: CreateUserREQ = {
           email: formData.email,
           password: formData.password,
-          stageName: formData.stageName,
-          communityId: formData.communityId,
+          username: formData.username,
+          role: formData.role,
           avatarUrl,
           backgroundUrl,
           bio: formData.bio,
+          // Only include communityId if role is IDOL
+          ...(formData.role === AccountRole.IDOL && formData.communityId
+            ? { communityId: formData.communityId }
+            : {}),
         };
 
         await createMutation.mutateAsync(createData);
-        alert('Idol created successfully!');
-      } else {
-        const updateData: UpdateIdolREQ = {
-          stageName: formData.stageName,
-          communityId: formData.communityId,
-          avatarUrl,
-          backgroundUrl,
-          bio: formData.bio,
-        };
-
-        await updateMutation.mutateAsync({ id: idolId, data: updateData });
-        alert('Idol updated successfully!');
+        toast.success('User created successfully!');
       }
 
-      // Invalidate idol list query to refetch new data
-      queryClient.invalidateQueries({ queryKey: [IDOLS_QUERY_KEY] });
+      // Invalidate users list query to refetch new data
+      queryClient.invalidateQueries({ queryKey: [USERS_QUERY_KEY] });
 
-      router.push('/user-management/idol-list');
+      router.push('/user-management');
     } catch (error) {
-      console.error('Error saving idol:', error);
-      alert(
-        `Failed to ${isCreateMode ? 'create' : 'update'} idol. Please try again.`
+      console.error('Error saving user:', error);
+      toast.error(
+        `Failed to ${isCreateMode ? 'create' : 'update'} user. Please try again.`
       );
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  if (!isCreateMode && isLoadingIdol) {
+  if (!isCreateMode && isLoadingUser) {
     return (
       <div className="flex flex-col items-center justify-center py-12">
         <p className="text-gray-600 dark:text-gray-400">Loading...</p>
@@ -203,9 +204,9 @@ export default function IdolForm() {
     <div>
       <div className="mb-5 flex items-center justify-between">
         <h2 className="text-2xl font-semibold text-gray-800 dark:text-white/90">
-          {isCreateMode ? 'Create New Idol' : 'Edit Idol'}
+          {isCreateMode ? 'Create New User' : 'Edit User'}
         </h2>
-        <Link href="/user-management/idol-list">
+        <Link href="/user-management">
           <Button variant="outline">Back to List</Button>
         </Link>
       </div>
@@ -219,14 +220,13 @@ export default function IdolForm() {
             </h4>
             <div className="grid grid-cols-1 gap-5 lg:grid-cols-2 lg:gap-x-6">
               <div>
-                <Label>Stage Name *</Label>
+                <Label>Username *</Label>
                 <Input
                   type="text"
-                  name="stageName"
-                  placeholder="Enter stage name"
-                  defaultValue={formData.stageName}
+                  name="username"
+                  placeholder="Enter username"
+                  defaultValue={formData.username}
                   onChange={handleInputChange}
-                  required
                 />
               </div>
               <div>
@@ -237,7 +237,6 @@ export default function IdolForm() {
                   placeholder="Enter email address"
                   defaultValue={formData.email}
                   onChange={handleInputChange}
-                  required
                   disabled={!isCreateMode}
                 />
               </div>
@@ -250,24 +249,37 @@ export default function IdolForm() {
                     placeholder="Enter password"
                     defaultValue={formData.password}
                     onChange={handleInputChange}
-                    required
                   />
                 </div>
               )}
               <div>
-                <Label>Community *</Label>
+                <Label>Role *</Label>
                 <Select
-                  options={communityOptions}
-                  placeholder={
-                    isLoadingCommunities
-                      ? 'Loading communities...'
-                      : 'Select community'
-                  }
-                  defaultValue={formData.communityId}
-                  onChange={(value) => handleSelectChange('communityId', value)}
-                  disabled={isLoadingCommunities}
+                  options={roleOptions}
+                  placeholder="Select role"
+                  defaultValue={formData.role}
+                  onChange={(value) => handleSelectChange('role', value)}
                 />
               </div>
+              {shouldShowCommunity && (
+                <div>
+                  <Label>
+                    Community {formData.role === AccountRole.IDOL ? '*' : ''}
+                  </Label>
+                  <Select
+                    options={communityOptions}
+                    placeholder={
+                      isLoadingCommunities
+                        ? 'Loading communities...'
+                        : 'Select community'
+                    }
+                    defaultValue={formData.communityId}
+                    onChange={(value) =>
+                      handleSelectChange('communityId', value)
+                    }
+                  />
+                </div>
+              )}
               <div className="lg:col-span-2">
                 <Label>Bio</Label>
                 <Input
@@ -330,7 +342,7 @@ export default function IdolForm() {
 
           {/* Form Actions */}
           <div className="flex items-center justify-end gap-3">
-            <Link href="/user-management/idol-list">
+            <Link href="/user-management">
               <Button variant="outline" disabled={isSubmitting}>
                 Cancel
               </Button>
@@ -343,7 +355,7 @@ export default function IdolForm() {
               {isSubmitting
                 ? 'Saving...'
                 : isCreateMode
-                  ? 'Create Idol'
+                  ? 'Create User'
                   : 'Save Changes'}
             </Button>
           </div>

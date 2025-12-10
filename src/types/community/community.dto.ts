@@ -1,16 +1,19 @@
 export type CommunityDto = {
   id: string;
   name: string;
-  avatarUrl?: string;
-  description?: string;
+  avatarUrl?: string | null;
+  backgroundUrl?: string | null;
+  description?: string | null;
   isActive: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-  version: number;
+  createdAt: string;
+  updatedAt: string;
 };
 
-export type CommunitySummaryDto = {
+export type CommunityInfoDto = {
   id: string;
   name: string;
-  logoUrl?: string;
+  avatarUrl: string;
+  backgroundUrl: string;
+  description: string;
+  totalMembers: number;
 };

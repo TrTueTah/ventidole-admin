@@ -5,8 +5,3 @@ export enum Path {
   PROFILE = 'profile',
   USER_MANAGEMENT = 'user-management',
 }
-
-export enum UserManagementPath {
-  USER_LIST = 'user-list',
-  IDOL_LIST = 'idol-list',
-}

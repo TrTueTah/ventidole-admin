@@ -60,6 +60,11 @@ export interface DataTableProps<T> {
     onClick?: () => void;
     className?: string;
   };
+  onSortChange?: (key: string, direction: 'asc' | 'desc') => void;
+  sortConfig?: {
+    key: string;
+    direction: 'asc' | 'desc';
+  } | null;
   className?: string;
 }
 
@@ -109,13 +114,15 @@ export function DataTable<T extends Record<string, any>>({
   emptyText,
   rowKey = 'id' as keyof T,
   onRow,
+  onSortChange,
+  sortConfig: externalSortConfig,
   className = '',
 }: DataTableProps<T>) {
   const tableRef = useRef<HTMLDivElement>(null);
   const [expandedRows, setExpandedRows] = useState<Set<string | number>>(
     new Set()
   );
-  const [sortConfig, setSortConfig] = useState<{
+  const [internalSortConfig, setInternalSortConfig] = useState<{
     key: string;
     direction: 'asc' | 'desc';
   } | null>(null);
@@ -123,6 +130,9 @@ export function DataTable<T extends Record<string, any>>({
   const [selectedKeys, setSelectedKeys] = useState<Set<string | number>>(
     new Set(rowSelection?.selectedRowKeys || [])
   );
+
+  // Use external sort config if provided (server-side), otherwise use internal (client-side)
+  const sortConfig = externalSortConfig !== undefined ? externalSortConfig : internalSortConfig;
 
   // Determine if using server-side pagination
   const isServerPagination = typeof pagination === 'object' && pagination !== null;
@@ -242,7 +252,15 @@ export function DataTable<T extends Record<string, any>>({
       direction = 'desc';
     }
 
-    setSortConfig({ key: column.key, direction });
+    const newSortConfig = { key: column.key, direction };
+
+    // If onSortChange is provided, use server-side sorting
+    if (onSortChange) {
+      onSortChange(column.key, direction);
+    } else {
+      // Otherwise, use client-side sorting
+      setInternalSortConfig(newSortConfig);
+    }
   };
 
   // Sort data

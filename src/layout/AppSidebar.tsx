@@ -64,18 +64,7 @@ const navItems: NavItem[] = [
   {
     name: 'User management',
     icon: <UserCircleIcon />,
-    subItems: [
-      {
-        name: 'User List',
-        path: PATH.USER_MANAGEMENT.get('USER_LIST'),
-        pro: false,
-      },
-      {
-        name: 'Idol List',
-        path: PATH.USER_MANAGEMENT.get('IDOL_LIST'),
-        pro: false,
-      },
-    ],
+    path: PATH.USER_MANAGEMENT.get(),
   },
 ];
 

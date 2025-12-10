@@ -8,15 +8,21 @@ import Badge from '@/components/ui/badge/Badge';
 import Button from '@/components/ui/button/Button';
 import { PencilIcon, SearchIcon, PlusIcon } from '@/icons';
 import Breadcrumb from '@/components/ui/breadcrumb/Breadcrumb';
-import { useIdolsQuery } from '@/hooks/useIdolsQuery';
-import { IdolDto } from '@/types/idol/idol.dto';
+import { useUsersQuery } from '@/hooks/useUsersQuery';
+import { UserDto } from '@/types/user/user.dto';
+import { UserSortBy } from '@/types/user/user.req';
+import { toast } from 'react-toastify';
 
-export default function IdolList() {
+export default function UserManagementPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
   const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
   const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  const pageSize = 8;
+  const [sortConfig, setSortConfig] = useState<{
+    key: string;
+    direction: 'asc' | 'desc';
+  } | null>(null);
 
   // Debounce search input to avoid excessive API calls
   useEffect(() => {
@@ -28,20 +34,39 @@ export default function IdolList() {
     return () => clearTimeout(timer);
   }, [searchTerm]);
 
+  // Map column keys to UserSortBy enum
+  const mapColumnKeyToSortBy = (key: string): UserSortBy | undefined => {
+    const mapping: Record<string, UserSortBy> = {
+      username: UserSortBy.USERNAME,
+      email: UserSortBy.EMAIL,
+      role: UserSortBy.ROLE,
+      createdAt: UserSortBy.CREATED_AT,
+    };
+    return mapping[key];
+  };
+
+  // Handle sort change
+  const handleSortChange = (key: string, direction: 'asc' | 'desc') => {
+    setSortConfig({ key, direction });
+    setPage(1); // Reset to page 1 when sort changes
+  };
+
   // Fetch idols data using TanStack Query with debounced search
-  const { data, isLoading, isError, error } = useIdolsQuery({
+  const { data, isLoading, isError, error } = useUsersQuery({
     page,
     limit: pageSize,
     search: debouncedSearch,
+    sortBy: sortConfig ? mapColumnKeyToSortBy(sortConfig.key) : undefined,
+    sortOrder: sortConfig?.direction,
   });
 
   // Get idol data directly from API response (no client-side filtering)
-  const idolData: IdolDto[] = data?.data || [];
+  const idolData: UserDto[] = data?.data || [];
 
   // Handle selection change
   const handleSelectionChange = (
     keys: (string | number)[],
-    rows: IdolDto[]
+    rows: UserDto[]
   ) => {
     setSelectedRowKeys(keys as string[]);
     console.log('Selected keys:', keys);
@@ -49,14 +74,14 @@ export default function IdolList() {
   };
 
   // Define columns for DataTable
-  const columns: Column<IdolDto>[] = [
+  const columns: Column<UserDto>[] = [
     {
-      key: 'stageName',
-      title: 'Idol',
-      dataIndex: 'stageName',
+      key: 'username',
+      title: 'User',
+      dataIndex: 'username',
       sorter: true,
       width: '25%',
-      render: (value: string, record: IdolDto) => (
+      render: (value: string, record: UserDto) => (
         <div className="flex items-center gap-3">
           <div className="h-10 w-10 shrink-0 overflow-hidden rounded-full">
             <Image
@@ -67,7 +92,7 @@ export default function IdolList() {
             />
           </div>
           <Link
-            href={`/user-management/idol-list/${record.id}`}
+            href={`/user-management/${record.id}`}
             className="hover:text-brand-500 dark:hover:text-brand-400 truncate font-medium text-gray-800 transition dark:text-white/90"
           >
             {value}
@@ -80,16 +105,16 @@ export default function IdolList() {
       title: 'Email',
       sorter: true,
       width: '25%',
-      render: (_: any, record: IdolDto) => record.user.email,
+      render: (_: any, record: UserDto) => record?.email ?? '',
     },
     {
-      key: 'community',
-      title: 'Community',
+      key: 'role',
+      title: 'Role',
       sorter: true,
       width: '12%',
-      render: (_: any, record: IdolDto) => (
+      render: (_: any, record: UserDto) => (
         <Badge size="sm" color="dark">
-          {record.community.name}
+          {record.role}
         </Badge>
       ),
     },
@@ -97,7 +122,6 @@ export default function IdolList() {
       key: 'isActive',
       title: 'Status',
       dataIndex: 'isActive',
-      sorter: true,
       width: '12%',
       render: (value: boolean) => (
         <Badge size="sm" color={value ? 'success' : 'error'}>
@@ -109,9 +133,8 @@ export default function IdolList() {
       key: 'createdAt',
       title: 'Joined At',
       dataIndex: 'createdAt',
+      sorter: true,
       width: '12%',
-      sorter: (a: IdolDto, b: IdolDto) =>
-        new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
       render: (value: Date) => new Date(value).toLocaleDateString(),
     },
     {
@@ -119,14 +142,14 @@ export default function IdolList() {
       title: 'Actions',
       align: 'center',
       width: '14%',
-      render: (_: any, record: IdolDto) => (
+      render: (any: _, record: UserDto) => (
         <div className="flex items-center justify-center gap-2">
-          <Link href={`/user-management/idol-list/${record.id}`}>
+          <Link href={`/user-management/${record.id}`}>
             <Button size="sm" variant="outline">
               View
             </Button>
           </Link>
-          <Link href={`/user-management/idol-list/form/${record.id}`}>
+          <Link href={`/user-management/form/${record.id}`}>
             <Button size="sm" variant="primary" startIcon={<PencilIcon />}>
               Edit
             </Button>
@@ -144,10 +167,10 @@ export default function IdolList() {
       {/* Page Title and Description */}
       <div className="mb-6">
         <h1 className="text-2xl font-semibold text-gray-800 dark:text-white/90">
-          Idol Management
+          User Management
         </h1>
         <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-          Track and manage all idols in your system.
+          Track and manage all users in your system.
         </p>
       </div>
 
@@ -181,9 +204,9 @@ export default function IdolList() {
               </Button>
             </div>
           )}
-          <Link href="/user-management/idol-list/form/create">
+          <Link href="/user-management/form/create">
             <Button variant="primary" size="sm" startIcon={<PlusIcon />}>
-              Add Idol
+              Add User
             </Button>
           </Link>
         </div>
@@ -218,6 +241,8 @@ export default function IdolList() {
           selectedRowKeys: selectedRowKeys,
           onChange: handleSelectionChange,
         }}
+        sortConfig={sortConfig}
+        onSortChange={handleSortChange}
         emptyText="No idols found. Try adjusting your search criteria."
       />
     </div>
