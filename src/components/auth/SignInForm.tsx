@@ -65,8 +65,8 @@ export default function SignInForm() {
             <form onSubmit={handleSignIn}>
               <div className="space-y-6">
                 {errorMessage && (
-                  <div className="rounded-md bg-error-50 p-4 dark:bg-error-900/20">
-                    <p className="text-sm text-error-600 dark:text-error-400">
+                  <div className="bg-error-50 dark:bg-error-900/20 rounded-md p-4">
+                    <p className="text-error-600 dark:text-error-400 text-sm">
                       {errorMessage}
                     </p>
                   </div>
@@ -126,7 +126,7 @@ export default function SignInForm() {
                   <button
                     type="submit"
                     disabled={loginMutation.isPending}
-                    className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-brand-500 px-4 py-3 text-sm font-medium text-white shadow-theme-xs transition hover:bg-brand-600 disabled:cursor-not-allowed disabled:bg-brand-300 disabled:opacity-50"
+                    className="bg-brand-500 shadow-theme-xs hover:bg-brand-600 disabled:bg-brand-300 inline-flex w-full items-center justify-center gap-2 rounded-lg px-4 py-3 text-sm font-medium text-white transition disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     {loginMutation.isPending ? 'Signing in...' : 'Sign in'}
                   </button>

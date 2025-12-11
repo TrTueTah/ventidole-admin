@@ -32,7 +32,10 @@ export interface DataTableProps<T> {
   };
   rowSelection?: {
     selectedRowKeys?: (string | number)[];
-    onChange?: (selectedRowKeys: (string | number)[], selectedRows: T[]) => void;
+    onChange?: (
+      selectedRowKeys: (string | number)[],
+      selectedRows: T[]
+    ) => void;
   };
   scroll?: {
     x?: number | string;
@@ -132,10 +135,12 @@ export function DataTable<T extends Record<string, any>>({
   );
 
   // Use external sort config if provided (server-side), otherwise use internal (client-side)
-  const sortConfig = externalSortConfig !== undefined ? externalSortConfig : internalSortConfig;
+  const sortConfig =
+    externalSortConfig !== undefined ? externalSortConfig : internalSortConfig;
 
   // Determine if using server-side pagination
-  const isServerPagination = typeof pagination === 'object' && pagination !== null;
+  const isServerPagination =
+    typeof pagination === 'object' && pagination !== null;
   const paginationConfig = isServerPagination ? pagination : null;
 
   // Sync selected keys with external prop
@@ -167,9 +172,7 @@ export function DataTable<T extends Record<string, any>>({
   // Handle select all
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
-      const allKeys = new Set(
-        paginatedData.map((item) => getRowKey(item, 0))
-      );
+      const allKeys = new Set(paginatedData.map((item) => getRowKey(item, 0)));
       const newSelectedKeys = new Set([...selectedKeys, ...allKeys]);
       setSelectedKeys(newSelectedKeys);
 
@@ -292,7 +295,9 @@ export function DataTable<T extends Record<string, any>>({
   if (isServerPagination && paginationConfig) {
     // Server-side pagination: use data as-is from server
     paginatedData = sortedData;
-    totalPages = paginationConfig.totalPages || Math.ceil(paginationConfig.total / paginationConfig.pageSize);
+    totalPages =
+      paginationConfig.totalPages ||
+      Math.ceil(paginationConfig.total / paginationConfig.pageSize);
     totalRecords = paginationConfig.total;
   } else {
     // Client-side pagination
@@ -360,7 +365,7 @@ export function DataTable<T extends Record<string, any>>({
                           )
                         }
                         onChange={(e) => handleSelectAll(e.target.checked)}
-                        className="h-4 w-4 rounded border-gray-300 text-brand-500 focus:ring-brand-500 dark:border-gray-600 dark:bg-gray-800"
+                        className="text-brand-500 focus:ring-brand-500 h-4 w-4 rounded border-gray-300 dark:border-gray-600 dark:bg-gray-800"
                       />
                     </th>
                   )}
@@ -412,13 +417,25 @@ export function DataTable<T extends Record<string, any>>({
             <tbody className="divide-y divide-gray-200 bg-white dark:divide-gray-800 dark:bg-gray-900">
               {loading ? (
                 <tr>
-                  <td colSpan={columns.length + (expandable ? 1 : 0) + (rowSelection ? 1 : 0)}>
+                  <td
+                    colSpan={
+                      columns.length +
+                      (expandable ? 1 : 0) +
+                      (rowSelection ? 1 : 0)
+                    }
+                  >
                     <LoadingSpinner />
                   </td>
                 </tr>
               ) : paginatedData.length === 0 ? (
                 <tr>
-                  <td colSpan={columns.length + (expandable ? 1 : 0) + (rowSelection ? 1 : 0)}>
+                  <td
+                    colSpan={
+                      columns.length +
+                      (expandable ? 1 : 0) +
+                      (rowSelection ? 1 : 0)
+                    }
+                  >
                     <EmptyState text={emptyText} />
                   </td>
                 </tr>
@@ -450,7 +467,7 @@ export function DataTable<T extends Record<string, any>>({
                                 handleRowSelect(key, record);
                               }}
                               onClick={(e) => e.stopPropagation()}
-                              className="h-4 w-4 rounded border-gray-300 text-brand-500 focus:ring-brand-500 dark:border-gray-600 dark:bg-gray-800"
+                              className="text-brand-500 focus:ring-brand-500 h-4 w-4 rounded border-gray-300 dark:border-gray-600 dark:bg-gray-800"
                             />
                           </td>
                         )}
@@ -503,7 +520,9 @@ export function DataTable<T extends Record<string, any>>({
                         expandable.expandedRowRender && (
                           <tr>
                             <td
-                              colSpan={columns.length + 1 + (rowSelection ? 1 : 0)}
+                              colSpan={
+                                columns.length + 1 + (rowSelection ? 1 : 0)
+                              }
                               className="bg-gray-50 px-6 py-4 dark:bg-gray-800/50"
                             >
                               {expandable.expandedRowRender(record)}
@@ -525,8 +544,13 @@ export function DataTable<T extends Record<string, any>>({
           <div className="text-sm text-gray-700 dark:text-gray-300">
             {isServerPagination && paginationConfig ? (
               <>
-                Showing {(paginationConfig.current - 1) * paginationConfig.pageSize + 1} to{' '}
-                {Math.min(paginationConfig.current * paginationConfig.pageSize, totalRecords)}{' '}
+                Showing{' '}
+                {(paginationConfig.current - 1) * paginationConfig.pageSize + 1}{' '}
+                to{' '}
+                {Math.min(
+                  paginationConfig.current * paginationConfig.pageSize,
+                  totalRecords
+                )}{' '}
                 of {totalRecords} results
               </>
             ) : (
@@ -541,12 +565,18 @@ export function DataTable<T extends Record<string, any>>({
             <button
               onClick={() => {
                 if (isServerPagination && paginationConfig?.onChange) {
-                  paginationConfig.onChange(Math.max(1, paginationConfig.current - 1));
+                  paginationConfig.onChange(
+                    Math.max(1, paginationConfig.current - 1)
+                  );
                 } else {
                   setCurrentPage((p) => Math.max(1, p - 1));
                 }
               }}
-              disabled={isServerPagination ? paginationConfig?.current === 1 : currentPage === 1}
+              disabled={
+                isServerPagination
+                  ? paginationConfig?.current === 1
+                  : currentPage === 1
+              }
               className="rounded-lg border border-gray-300 px-3 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800"
             >
               Previous
@@ -564,7 +594,9 @@ export function DataTable<T extends Record<string, any>>({
                       }
                     }}
                     className={`h-10 w-10 rounded-lg text-sm font-medium transition ${
-                      (isServerPagination ? paginationConfig?.current : currentPage) === page
+                      (isServerPagination
+                        ? paginationConfig?.current
+                        : currentPage) === page
                         ? 'bg-brand-500 text-white'
                         : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800'
                     }`}
@@ -577,7 +609,9 @@ export function DataTable<T extends Record<string, any>>({
             <button
               onClick={() => {
                 if (isServerPagination && paginationConfig?.onChange) {
-                  paginationConfig.onChange(Math.min(totalPages, paginationConfig.current + 1));
+                  paginationConfig.onChange(
+                    Math.min(totalPages, paginationConfig.current + 1)
+                  );
                 } else {
                   setCurrentPage((p) => Math.min(totalPages, p + 1));
                 }
