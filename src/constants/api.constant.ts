@@ -42,4 +42,10 @@ export const ENDPOINTS = {
       return buildEndpoint(this._, this[key]);
     },
   },
+  SHOP: {
+    _: Endpoint.SHOP,
+    get(path?: string | number) {
+      return buildEndpoint(this._, path);
+    },
+  },
 };

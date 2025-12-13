@@ -55,6 +55,7 @@ import MoreDotIcon from './more-dot.svg';
 import BellIcon from './bell.svg';
 import BreadcrumbIcon from './breadcrumb.svg';
 import SearchIcon from './search.svg';
+import MarketplaceIcon from './marketplace.svg';
 
 export {
   DownloadIcon,
@@ -114,4 +115,5 @@ export {
   ChatIcon,
   BreadcrumbIcon,
   SearchIcon,
+  MarketplaceIcon,
 };

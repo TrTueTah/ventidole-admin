@@ -11,6 +11,7 @@ import {
   GridIcon,
   HorizontaLDots,
   ListIcon,
+  MarketplaceIcon,
   PageIcon,
   PieChartIcon,
   PlugInIcon,
@@ -65,6 +66,15 @@ const navItems: NavItem[] = [
     name: 'User management',
     icon: <UserCircleIcon />,
     path: PATH.USER_MANAGEMENT.get(),
+  },
+  {
+    name: 'Marketplace',
+    icon: <MarketplaceIcon />,
+    subItems: [
+      { name: 'Shop', path: '/marketplace/shop', pro: false },
+      { name: 'Product', path: '/marketplace/product', pro: false },
+      { name: 'Order', path: '/marketplace/order', pro: false },
+    ],
   },
 ];
 
