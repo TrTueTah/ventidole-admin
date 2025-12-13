@@ -48,4 +48,10 @@ export const ENDPOINTS = {
       return buildEndpoint(this._, path);
     },
   },
+  ORDER: {
+    _: Endpoint.ORDER,
+    get(path?: string | number) {
+      return buildEndpoint(this._, path);
+    },
+  },
 };

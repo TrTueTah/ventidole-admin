@@ -4,6 +4,7 @@ export enum Endpoint {
   PRODUCT = 'admin/product',
   COMMUNITY = 'admin/community',
   SHOP = 'admin/shop',
+  ORDER = 'admin/order',
   FILE = 'file',
 }
 
