@@ -1,7 +1,7 @@
 export enum Endpoint {
   AUTHENTICATION = 'auth',
   USER = 'admin/user',
-  PRODUCT = 'admin/products',
+  PRODUCT = 'admin/product',
   COMMUNITY = 'admin/community',
   SHOP = 'admin/shop',
   FILE = 'file',

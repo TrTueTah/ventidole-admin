@@ -31,8 +31,8 @@ export const ENDPOINTS = {
   },
   PRODUCT: {
     _: Endpoint.PRODUCT,
-    get() {
-      return buildEndpoint(this._);
+    get(path?: string | number) {
+      return buildEndpoint(this._, path);
     },
   },
   FILE: {
