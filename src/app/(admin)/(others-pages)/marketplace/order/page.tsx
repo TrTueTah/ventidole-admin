@@ -10,7 +10,11 @@ import { SearchIcon } from '@/icons';
 import Breadcrumb from '@/components/ui/breadcrumb/Breadcrumb';
 import { useOrdersQuery } from '@/hooks/useOrdersQuery';
 import { OrderDto, OrderStatus } from '@/types/order/order.dto';
-import { OrderSortBy } from '@/types/order/order.req';
+import {
+  OrderSortBy,
+  PaymentTransactionStatus,
+  PaymentMethod,
+} from '@/types/order/order.req';
 
 export default function OrderPage() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -22,6 +26,18 @@ export default function OrderPage() {
     key: string;
     direction: 'asc' | 'desc';
   } | null>(null);
+
+  // Filter states
+  const [orderStatusFilter, setOrderStatusFilter] = useState<
+    OrderStatus | undefined
+  >();
+  const [paymentStatusFilter, setPaymentStatusFilter] = useState<
+    PaymentTransactionStatus | undefined
+  >();
+  const [paymentMethodFilter, setPaymentMethodFilter] = useState<
+    PaymentMethod | undefined
+  >();
+  const [isActiveFilter, setIsActiveFilter] = useState<string | undefined>();
 
   // Debounce search input to avoid excessive API calls
   useEffect(() => {
@@ -37,8 +53,8 @@ export default function OrderPage() {
   const mapColumnKeyToSortBy = (key: string): OrderSortBy | undefined => {
     const mapping: Record<string, OrderSortBy> = {
       totalAmount: OrderSortBy.TOTAL_AMOUNT,
-      status: OrderSortBy.STATUS,
       createdAt: OrderSortBy.CREATED_AT,
+      paidAt: OrderSortBy.PAID_AT,
     };
     return mapping[key];
   };
@@ -56,6 +72,10 @@ export default function OrderPage() {
     search: debouncedSearch,
     sortBy: sortConfig ? mapColumnKeyToSortBy(sortConfig.key) : undefined,
     sortOrder: sortConfig?.direction,
+    orderStatus: orderStatusFilter,
+    paymentStatus: paymentStatusFilter,
+    paymentMethod: paymentMethodFilter,
+    isActive: isActiveFilter,
   });
 
   // Get order data directly from API response (no client-side filtering)
@@ -77,12 +97,13 @@ export default function OrderPage() {
       OrderStatus,
       'success' | 'warning' | 'error' | 'dark'
     > = {
-      [OrderStatus.PENDING]: 'warning',
-      [OrderStatus.PROCESSING]: 'dark',
-      [OrderStatus.SHIPPED]: 'dark',
+      [OrderStatus.PENDING_PAYMENT]: 'warning',
+      [OrderStatus.CONFIRMED]: 'dark',
+      [OrderStatus.PAID]: 'success',
+      [OrderStatus.SHIPPING]: 'dark',
       [OrderStatus.DELIVERED]: 'success',
-      [OrderStatus.CANCELLED]: 'error',
-      [OrderStatus.REFUNDED]: 'error',
+      [OrderStatus.CANCELED]: 'error',
+      [OrderStatus.EXPIRED]: 'error',
     };
     return colorMap[status] || 'dark';
   };
@@ -170,7 +191,7 @@ export default function OrderPage() {
       width: '12%',
       render: (value: OrderStatus) => (
         <Badge size="sm" color={getStatusColor(value)}>
-          {value.charAt(0).toUpperCase() + value.slice(1)}
+          {value.replace(/_/g, ' ')}
         </Badge>
       ),
     },
@@ -249,6 +270,100 @@ export default function OrderPage() {
             </div>
           )}
         </div>
+      </div>
+
+      {/* Filters */}
+      <div className="mb-5 flex flex-wrap gap-3">
+        {/* Order Status Filter */}
+        <select
+          value={orderStatusFilter || ''}
+          onChange={(e) => {
+            setOrderStatusFilter(
+              e.target.value ? (e.target.value as OrderStatus) : undefined
+            );
+            setPage(1);
+          }}
+          className="focus:border-brand-500 focus:ring-brand-500 rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm text-gray-800 transition focus:ring-1 focus:outline-none dark:border-white/[0.05] dark:bg-white/[0.03] dark:text-white/90"
+        >
+          <option value="">All Order Status</option>
+          <option value={OrderStatus.PENDING_PAYMENT}>Pending Payment</option>
+          <option value={OrderStatus.CONFIRMED}>Confirmed</option>
+          <option value={OrderStatus.PAID}>Paid</option>
+          <option value={OrderStatus.SHIPPING}>Shipping</option>
+          <option value={OrderStatus.DELIVERED}>Delivered</option>
+          <option value={OrderStatus.CANCELED}>Canceled</option>
+          <option value={OrderStatus.EXPIRED}>Expired</option>
+        </select>
+
+        {/* Payment Status Filter */}
+        <select
+          value={paymentStatusFilter || ''}
+          onChange={(e) => {
+            setPaymentStatusFilter(
+              e.target.value
+                ? (e.target.value as PaymentTransactionStatus)
+                : undefined
+            );
+            setPage(1);
+          }}
+          className="focus:border-brand-500 focus:ring-brand-500 rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm text-gray-800 transition focus:ring-1 focus:outline-none dark:border-white/[0.05] dark:bg-white/[0.03] dark:text-white/90"
+        >
+          <option value="">All Payment Status</option>
+          <option value={PaymentTransactionStatus.PENDING}>Pending</option>
+          <option value={PaymentTransactionStatus.PAID}>Paid</option>
+          <option value={PaymentTransactionStatus.FAILED}>Failed</option>
+          <option value={PaymentTransactionStatus.REFUNDED}>Refunded</option>
+        </select>
+
+        {/* Payment Method Filter */}
+        <select
+          value={paymentMethodFilter || ''}
+          onChange={(e) => {
+            setPaymentMethodFilter(
+              e.target.value ? (e.target.value as PaymentMethod) : undefined
+            );
+            setPage(1);
+          }}
+          className="focus:border-brand-500 focus:ring-brand-500 rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm text-gray-800 transition focus:ring-1 focus:outline-none dark:border-white/[0.05] dark:bg-white/[0.03] dark:text-white/90"
+        >
+          <option value="">All Payment Methods</option>
+          <option value={PaymentMethod.CREDIT}>Credit</option>
+          <option value={PaymentMethod.COD}>COD</option>
+        </select>
+
+        {/* Active Status Filter */}
+        <select
+          value={isActiveFilter || ''}
+          onChange={(e) => {
+            setIsActiveFilter(e.target.value || undefined);
+            setPage(1);
+          }}
+          className="focus:border-brand-500 focus:ring-brand-500 rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm text-gray-800 transition focus:ring-1 focus:outline-none dark:border-white/[0.05] dark:bg-white/[0.03] dark:text-white/90"
+        >
+          <option value="">All Status</option>
+          <option value="true">Active</option>
+          <option value="false">Inactive</option>
+        </select>
+
+        {/* Clear Filters Button */}
+        {(orderStatusFilter ||
+          paymentStatusFilter ||
+          paymentMethodFilter ||
+          isActiveFilter) && (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              setOrderStatusFilter(undefined);
+              setPaymentStatusFilter(undefined);
+              setPaymentMethodFilter(undefined);
+              setIsActiveFilter(undefined);
+              setPage(1);
+            }}
+          >
+            Clear Filters
+          </Button>
+        )}
       </div>
 
       {/* Error State */}

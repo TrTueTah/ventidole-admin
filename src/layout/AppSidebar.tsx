@@ -68,6 +68,19 @@ const navItems: NavItem[] = [
     path: PATH.USER_MANAGEMENT.get(),
   },
   {
+    name: 'Community',
+    icon: <BoxCubeIcon />,
+    path: '/community',
+  },
+  {
+    name: 'Post Management',
+    icon: <PageIcon />,
+    subItems: [
+      { name: 'All Posts', path: '/post', pro: false },
+      { name: 'Reported Posts', path: '/post/reported', pro: false },
+    ],
+  },
+  {
     name: 'Marketplace',
     icon: <MarketplaceIcon />,
     subItems: [

@@ -5,6 +5,7 @@ export enum Endpoint {
   COMMUNITY = 'admin/community',
   SHOP = 'admin/shop',
   ORDER = 'admin/order',
+  POST = 'admin/post',
   FILE = 'file',
 }
 

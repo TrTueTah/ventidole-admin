@@ -54,4 +54,13 @@ export const ENDPOINTS = {
       return buildEndpoint(this._, path);
     },
   },
+  POST: {
+    _: Endpoint.POST,
+    REPORTED: 'reported',
+    BAN: 'ban',
+    get(path?: string | number, action?: 'reported' | 'ban') {
+      const basePath = buildEndpoint(this._, path);
+      return action ? `${basePath}/${action}` : basePath;
+    },
+  },
 };

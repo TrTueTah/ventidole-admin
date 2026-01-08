@@ -12,3 +12,18 @@ export type GetCommunitiesREQ = {
   sortOrder?: 'asc' | 'desc';
   isActive?: boolean;
 } & PagingREQ;
+
+export type CreateCommunityREQ = {
+  name: string;
+  description?: string;
+  avatarUrl?: string;
+  backgroundUrl?: string;
+};
+
+export type UpdateCommunityREQ = {
+  name?: string;
+  description?: string;
+  avatarUrl?: string;
+  backgroundUrl?: string;
+  isActive?: boolean;
+};

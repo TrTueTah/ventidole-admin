@@ -5,16 +5,30 @@ export enum OrderSortBy {
   CREATED_AT = 'createdAt',
   UPDATED_AT = 'updatedAt',
   TOTAL_AMOUNT = 'totalAmount',
-  STATUS = 'status',
+  PAID_AT = 'paidAt',
+}
+
+export enum PaymentTransactionStatus {
+  PENDING = 'PENDING',
+  PAID = 'PAID',
+  FAILED = 'FAILED',
+  REFUNDED = 'REFUNDED',
+}
+
+export enum PaymentMethod {
+  CREDIT = 'CREDIT',
+  COD = 'COD',
 }
 
 export type GetOrdersREQ = {
   search?: string;
+  userId?: string;
+  orderStatus?: OrderStatus;
+  paymentStatus?: PaymentTransactionStatus;
+  paymentMethod?: PaymentMethod;
+  isActive?: string;
   sortBy?: OrderSortBy;
   sortOrder?: 'asc' | 'desc';
-  status?: OrderStatus;
-  userId?: string;
-  isActive?: boolean;
 } & PagingREQ;
 
 export type UpdateOrderREQ = {
