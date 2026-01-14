@@ -6,6 +6,11 @@ export enum CommunitySortBy {
   NAME = 'name',
 }
 
+export enum CommunityType {
+  SOLO = 'SOLO',
+  GROUP = 'GROUP',
+}
+
 export type GetCommunitiesREQ = {
   search?: string;
   sortBy?: CommunitySortBy;
@@ -18,6 +23,7 @@ export type CreateCommunityREQ = {
   description?: string;
   avatarUrl?: string;
   backgroundUrl?: string;
+  communityType: CommunityType;
 };
 
 export type UpdateCommunityREQ = {

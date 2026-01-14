@@ -133,6 +133,7 @@ export function DataTable<T extends Record<string, any>>({
   const [selectedKeys, setSelectedKeys] = useState<Set<string | number>>(
     new Set(rowSelection?.selectedRowKeys || [])
   );
+  const [pageInputValue, setPageInputValue] = useState('');
 
   // Use external sort config if provided (server-side), otherwise use internal (client-side)
   const sortConfig =
@@ -307,6 +308,67 @@ export function DataTable<T extends Record<string, any>>({
       ? sortedData.slice((currentPage - 1) * pageSize, currentPage * pageSize)
       : sortedData;
   }
+
+  // Generate page numbers to display with ellipsis
+  const getPageNumbers = (): (number | string)[] => {
+    const current = isServerPagination ? paginationConfig?.current || 1 : currentPage;
+    const delta = 1; // Number of pages to show on each side of current page
+    const pages: (number | string)[] = [];
+
+    if (totalPages <= 7) {
+      // Show all pages if total is 7 or less
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      // Always show first page
+      pages.push(1);
+
+      // Calculate range around current page
+      const rangeStart = Math.max(2, current - delta);
+      const rangeEnd = Math.min(totalPages - 1, current + delta);
+
+      // Add ellipsis after first page if needed
+      if (rangeStart > 2) {
+        pages.push('...');
+      }
+
+      // Add pages around current page
+      for (let i = rangeStart; i <= rangeEnd; i++) {
+        pages.push(i);
+      }
+
+      // Add ellipsis before last page if needed
+      if (rangeEnd < totalPages - 1) {
+        pages.push('...');
+      }
+
+      // Always show last page
+      pages.push(totalPages);
+    }
+
+    return pages;
+  };
+
+  // Handle jump to page
+  const handleJumpToPage = () => {
+    const pageNum = parseInt(pageInputValue, 10);
+    if (!isNaN(pageNum) && pageNum >= 1 && pageNum <= totalPages) {
+      if (isServerPagination && paginationConfig?.onChange) {
+        paginationConfig.onChange(pageNum);
+      } else {
+        setCurrentPage(pageNum);
+      }
+      setPageInputValue('');
+    }
+  };
+
+  // Handle enter key in page input
+  const handlePageInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleJumpToPage();
+    }
+  };
 
   return (
     <div className={`flex flex-col gap-4 ${className}`}>
@@ -582,15 +644,26 @@ export function DataTable<T extends Record<string, any>>({
               Previous
             </button>
             <div className="flex items-center gap-1">
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                (page) => (
+              {getPageNumbers().map((page, idx) => {
+                if (page === '...') {
+                  return (
+                    <span
+                      key={`ellipsis-${idx}`}
+                      className="flex h-10 w-10 items-center justify-center text-sm text-gray-700 dark:text-gray-300"
+                    >
+                      {page}
+                    </span>
+                  );
+                }
+
+                return (
                   <button
                     key={page}
                     onClick={() => {
                       if (isServerPagination && paginationConfig?.onChange) {
-                        paginationConfig.onChange(page);
+                        paginationConfig.onChange(page as number);
                       } else {
-                        setCurrentPage(page);
+                        setCurrentPage(page as number);
                       }
                     }}
                     className={`h-10 w-10 rounded-lg text-sm font-medium transition ${
@@ -603,8 +676,8 @@ export function DataTable<T extends Record<string, any>>({
                   >
                     {page}
                   </button>
-                )
-              )}
+                );
+              })}
             </div>
             <button
               onClick={() => {
@@ -625,6 +698,27 @@ export function DataTable<T extends Record<string, any>>({
             >
               Next
             </button>
+            <div className="ml-4 flex items-center gap-2">
+              <span className="text-sm text-gray-700 dark:text-gray-300">
+                Go to:
+              </span>
+              <input
+                type="number"
+                min="1"
+                max={totalPages}
+                value={pageInputValue}
+                onChange={(e) => setPageInputValue(e.target.value)}
+                onKeyDown={handlePageInputKeyDown}
+                placeholder="Page"
+                className="w-16 rounded-lg border border-gray-300 px-2 py-1 text-sm text-gray-700 transition focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300"
+              />
+              <button
+                onClick={handleJumpToPage}
+                className="rounded-lg border border-gray-300 px-3 py-1 text-sm font-medium text-gray-700 transition hover:bg-gray-50 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800"
+              >
+                Go
+              </button>
+            </div>
           </div>
         </div>
       )}

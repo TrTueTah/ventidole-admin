@@ -192,7 +192,7 @@ export default function PostManagementPage() {
       key: 'actions',
       title: 'Actions',
       align: 'center',
-      width: '6%',
+      width: '20%',
       render: (_: any, record: PostDto) => (
         <div className="flex items-center justify-center gap-2">
           <Link href={`/post/${record.id}`}>

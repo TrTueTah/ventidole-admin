@@ -63,4 +63,18 @@ export const ENDPOINTS = {
       return action ? `${basePath}/${action}` : basePath;
     },
   },
+  BANNER: {
+    _: Endpoint.BANNER,
+    get(path?: string | number) {
+      return buildEndpoint(this._, path);
+    },
+  },
+  ANALYTICS: {
+    _: Endpoint.ANALYTICS,
+    ECOMMERCE: 'ecommerce',
+    SOCIAL: 'social',
+    get(type?: 'ecommerce' | 'social') {
+      return type ? `/${this._}/${type}` : `/${this._}`;
+    },
+  },
 };

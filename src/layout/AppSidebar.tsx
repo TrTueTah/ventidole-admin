@@ -32,7 +32,10 @@ const navItems: NavItem[] = [
   {
     icon: <GridIcon />,
     name: 'Dashboard',
-    subItems: [{ name: 'Ecommerce', path: '/', pro: false }],
+    subItems: [
+      { name: 'Ecommerce', path: '/dashboard/ecommerce', pro: false },
+      { name: 'Social', path: '/dashboard/social', pro: false },
+    ],
   },
   {
     icon: <CalenderIcon />,
@@ -79,6 +82,11 @@ const navItems: NavItem[] = [
       { name: 'All Posts', path: '/post', pro: false },
       { name: 'Reported Posts', path: '/post/reported', pro: false },
     ],
+  },
+  {
+    name: 'Banner',
+    icon: <PageIcon />,
+    path: '/banner',
   },
   {
     name: 'Marketplace',

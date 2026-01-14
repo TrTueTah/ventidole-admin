@@ -8,10 +8,12 @@ import { toast } from 'react-toastify';
 import Button from '@/components/ui/button/Button';
 import Input from '@/components/form/input/InputField';
 import Label from '@/components/form/Label';
+import Select from '@/components/form/Select';
 import Image from 'next/image';
 import {
   CreateCommunityREQ,
   UpdateCommunityREQ,
+  CommunityType,
 } from '@/types/community/community.req';
 import { useCommunityQuery } from '@/hooks/useCommunityQuery';
 import { useCreateCommunity } from '@/hooks/useCreateCommunity';
@@ -31,6 +33,7 @@ export default function CommunityFormPage() {
     description: '',
     avatarUrl: '',
     backgroundUrl: '',
+    communityType: CommunityType.GROUP,
   });
 
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
@@ -55,6 +58,8 @@ export default function CommunityFormPage() {
         description: community.description || '',
         avatarUrl: community.avatarUrl || '',
         backgroundUrl: community.backgroundUrl || '',
+        communityType:
+          (community.communityType as CommunityType) || CommunityType.GROUP,
       });
       setAvatarPreview(community.avatarUrl || '');
       setBackgroundPreview(community.backgroundUrl || '');
@@ -68,6 +73,13 @@ export default function CommunityFormPage() {
     setFormData((prev) => ({
       ...prev,
       [name]: value,
+    }));
+  };
+
+  const handleSelectChange = (name: string, value: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value as CommunityType,
     }));
   };
 
@@ -121,6 +133,7 @@ export default function CommunityFormPage() {
           description: formData.description,
           avatarUrl,
           backgroundUrl,
+          communityType: formData.communityType,
         };
 
         await createMutation.mutateAsync(createData);
@@ -189,6 +202,21 @@ export default function CommunityFormPage() {
                   placeholder="Enter community name"
                   defaultValue={formData.name}
                   onChange={handleInputChange}
+                  required
+                />
+              </div>
+              <div>
+                <Label>Community Type *</Label>
+                <Select
+                  options={[
+                    { value: CommunityType.GROUP, label: 'Group' },
+                    { value: CommunityType.SOLO, label: 'Solo' },
+                  ]}
+                  placeholder="Select community type"
+                  defaultValue={formData.communityType}
+                  onChange={(value) =>
+                    handleSelectChange('communityType', value)
+                  }
                   required
                 />
               </div>

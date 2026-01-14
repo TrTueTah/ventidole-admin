@@ -4,6 +4,7 @@ export type CommunityDto = {
   avatarUrl?: string | null;
   backgroundUrl?: string | null;
   description?: string | null;
+  communityType: string;
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
@@ -15,5 +16,6 @@ export type CommunityInfoDto = {
   avatarUrl: string;
   backgroundUrl: string;
   description: string;
+  communityType: string;
   totalMembers: number;
 };
