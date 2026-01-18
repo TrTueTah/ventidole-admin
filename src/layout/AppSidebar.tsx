@@ -6,19 +6,16 @@ import { usePathname } from 'next/navigation';
 import { useSidebar } from '../context/SidebarContext';
 import {
   BoxCubeIcon,
-  CalenderIcon,
   ChevronDownIcon,
   GridIcon,
   HorizontaLDots,
-  ListIcon,
   MarketplaceIcon,
   PageIcon,
   PieChartIcon,
-  PlugInIcon,
-  TableIcon,
   UserCircleIcon,
 } from '../icons/index';
 import { PATH } from '@/router/path';
+import { APP_CONFIG } from '@/constants/app.constant';
 
 type NavItem = {
   name: string;
@@ -338,23 +335,23 @@ const AppSidebar: React.FC = () => {
             <>
               <Image
                 className="dark:hidden"
-                src="/images/logo/logo.svg"
-                alt="Logo"
+                src={APP_CONFIG.logo.light}
+                alt={APP_CONFIG.name}
                 width={150}
                 height={40}
               />
               <Image
                 className="hidden dark:block"
-                src="/images/logo/logo-dark.svg"
-                alt="Logo"
+                src={APP_CONFIG.logo.dark}
+                alt={APP_CONFIG.name}
                 width={150}
                 height={40}
               />
             </>
           ) : (
             <Image
-              src="/images/logo/logo-icon.svg"
-              alt="Logo"
+              src={APP_CONFIG.logo.icon}
+              alt={APP_CONFIG.name}
               width={32}
               height={32}
             />
