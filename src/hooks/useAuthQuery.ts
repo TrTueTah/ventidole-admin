@@ -52,7 +52,7 @@ export function useLogin(): UseMutationResult<
       }
 
       // Update account store with user data
-      setAccount(data.userId, data.name, data.email);
+      setAccount(data.userId, data.name, data.email, data.role);
     },
     onError: (error) => {
       // Clear any existing tokens on error

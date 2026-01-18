@@ -4,6 +4,10 @@ import { CreateUserREQ, GetUsersREQ } from '@/types/user/user.req';
 import { api } from './api-client';
 import { ENDPOINTS } from '@/constants/api.constant';
 
+export const getCurrentUserAPI = async (): Promise<BaseResponse<UserDto>> => {
+  return await api.get(`${process.env.NEXT_PUBLIC_API_URL}/user/me`);
+};
+
 export const getUsersAPI = async (
   data: GetUsersREQ
 ): Promise<PagingBaseRESP<UserDto[]>> => {

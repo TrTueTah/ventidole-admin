@@ -18,7 +18,6 @@ import {
   TableIcon,
   UserCircleIcon,
 } from '../icons/index';
-import SidebarWidget from './SidebarWidget';
 import { PATH } from '@/router/path';
 
 type NavItem = {
@@ -37,34 +36,34 @@ const navItems: NavItem[] = [
       { name: 'Social', path: '/dashboard/social', pro: false },
     ],
   },
-  {
-    icon: <CalenderIcon />,
-    name: 'Calendar',
-    path: '/calendar',
-  },
-  {
-    icon: <UserCircleIcon />,
-    name: 'User Profile',
-    path: '/profile',
-  },
-  {
-    name: 'Forms',
-    icon: <ListIcon />,
-    subItems: [{ name: 'Form Elements', path: '/form-elements', pro: false }],
-  },
-  {
-    name: 'Tables',
-    icon: <TableIcon />,
-    subItems: [{ name: 'Basic Tables', path: '/basic-tables', pro: false }],
-  },
-  {
-    name: 'Pages',
-    icon: <PageIcon />,
-    subItems: [
-      { name: 'Blank Page', path: '/blank', pro: false },
-      { name: '404 Error', path: '/error-404', pro: false },
-    ],
-  },
+  // {
+  //   icon: <CalenderIcon />,
+  //   name: 'Calendar',
+  //   path: '/calendar',
+  // },
+  // {
+  //   icon: <UserCircleIcon />,
+  //   name: 'User Profile',
+  //   path: '/profile',
+  // },
+  // {
+  //   name: 'Forms',
+  //   icon: <ListIcon />,
+  //   subItems: [{ name: 'Form Elements', path: '/form-elements', pro: false }],
+  // },
+  // {
+  //   name: 'Tables',
+  //   icon: <TableIcon />,
+  //   subItems: [{ name: 'Basic Tables', path: '/basic-tables', pro: false }],
+  // },
+  // {
+  //   name: 'Pages',
+  //   icon: <PageIcon />,
+  //   subItems: [
+  //     { name: 'Blank Page', path: '/blank', pro: false },
+  //     { name: '404 Error', path: '/error-404', pro: false },
+  //   ],
+  // },
   {
     name: 'User management',
     icon: <UserCircleIcon />,
@@ -119,14 +118,6 @@ const othersItems: NavItem[] = [
       { name: 'Buttons', path: '/buttons', pro: false },
       { name: 'Images', path: '/images', pro: false },
       { name: 'Videos', path: '/videos', pro: false },
-    ],
-  },
-  {
-    icon: <PlugInIcon />,
-    name: 'Authentication',
-    subItems: [
-      { name: 'Sign In', path: '/signin', pro: false },
-      { name: 'Sign Up', path: '/signup', pro: false },
     ],
   },
 ];
@@ -398,13 +389,13 @@ const AppSidebar: React.FC = () => {
                     : 'justify-start'
                 }`}
               >
-                {isExpanded || isHovered || isMobileOpen ? (
+                {/* {isExpanded || isHovered || isMobileOpen ? (
                   'Others'
                 ) : (
                   <HorizontaLDots />
-                )}
+                )} */}
               </h2>
-              {renderMenuItems(othersItems, 'others')}
+              {/* {renderMenuItems(othersItems, 'others')} */}
             </div>
           </div>
         </nav>

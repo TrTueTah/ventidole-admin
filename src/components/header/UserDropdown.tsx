@@ -4,8 +4,10 @@ import Link from 'next/link';
 import React, { useState } from 'react';
 import { Dropdown } from '../ui/dropdown/Dropdown';
 import { DropdownItem } from '../ui/dropdown/DropdownItem';
+import { useAccountStore } from '@/store/account.store';
 
 export default function UserDropdown() {
+  const { name, email } = useAccountStore();
   const [isOpen, setIsOpen] = useState(false);
 
   function toggleDropdown(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
@@ -22,16 +24,16 @@ export default function UserDropdown() {
         onClick={toggleDropdown}
         className="dropdown-toggle flex items-center text-gray-700 dark:text-gray-400"
       >
-        <span className="mr-3 h-11 w-11 overflow-hidden rounded-full">
+        <span className="mr-3 h-11 w-11 overflow-hidden rounded-full border">
           <Image
             width={44}
             height={44}
-            src="/images/user/owner.jpg"
+            src="/images/user/user-image.png"
             alt="User"
           />
         </span>
 
-        <span className="text-theme-sm mr-1 block font-medium">Musharof</span>
+        <span className="text-theme-sm mr-1 block font-medium">{name}</span>
 
         <svg
           className={`stroke-gray-500 transition-transform duration-200 dark:stroke-gray-400 ${
@@ -60,14 +62,14 @@ export default function UserDropdown() {
       >
         <div>
           <span className="text-theme-sm block font-medium text-gray-700 dark:text-gray-400">
-            Musharof Chowdhury
+            {name}
           </span>
           <span className="text-theme-xs mt-0.5 block text-gray-500 dark:text-gray-400">
-            randomuser@pimjo.com
+            {email}
           </span>
         </div>
 
-        <ul className="flex flex-col gap-1 border-b border-gray-200 pt-4 pb-3 dark:border-gray-800">
+        {/* <ul className="flex flex-col gap-1 border-b border-gray-200 pt-4 pb-3 dark:border-gray-800">
           <li>
             <DropdownItem
               onItemClick={closeDropdown}
@@ -143,13 +145,13 @@ export default function UserDropdown() {
               Support
             </DropdownItem>
           </li>
-        </ul>
+        </ul> */}
         <Link
           href="/signin"
           className="group text-theme-sm mt-3 flex items-center gap-3 rounded-lg px-3 py-2 font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
         >
           <svg
-            className="fill-gray-500 group-hover:fill-gray-700 dark:group-hover:fill-gray-300"
+            className="fill-error-500 dark:group-hover:fill-error-500 group-hover:fill-error-500"
             width="24"
             height="24"
             viewBox="0 0 24 24"
@@ -163,7 +165,7 @@ export default function UserDropdown() {
               fill=""
             />
           </svg>
-          Sign out
+          <span className="text-error-500">Sign out</span>
         </Link>
       </Dropdown>
     </div>

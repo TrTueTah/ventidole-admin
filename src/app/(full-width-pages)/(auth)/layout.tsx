@@ -29,7 +29,7 @@ export default function AuthLayout({
                   />
                 </div>
                 <p className="text-center text-gray-400 dark:text-white/60">
-                  Free and Open-Source Tailwind CSS Admin Dashboard Template
+                  Welcome to VentiDole Admin Panel!
                 </p>
               </div>
             </div>

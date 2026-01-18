@@ -128,26 +128,33 @@ export default function OrderPage() {
       key: 'user',
       title: 'Customer',
       width: '22%',
-      render: (_: any, record: OrderDto) => (
-        <div className="flex items-center gap-3">
-          <div className="h-8 w-8 shrink-0 overflow-hidden rounded-full">
-            <Image
-              width={32}
-              height={32}
-              src={record.user.avatarUrl || '/images/user/user-01.png'}
-              alt={record.user.username}
-            />
+      render: (_: any, record: OrderDto) => {
+        const firstChar = record.user.username?.charAt(0).toUpperCase();
+        return (
+          <div className="flex items-center gap-3">
+            <div className="bg-brand-500 flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full font-semibold text-white">
+              {record.user.avatarUrl ? (
+                <Image
+                  width={40}
+                  height={40}
+                  src={record.user.avatarUrl || '/images/user/user-01.png'}
+                  alt={record.user.username}
+                />
+              ) : (
+                <span>{firstChar}</span>
+              )}
+            </div>
+            <div className="flex flex-col">
+              <span className="text-sm font-medium text-gray-800 dark:text-white/90">
+                {record.user.username}
+              </span>
+              <span className="text-xs text-gray-500 dark:text-gray-400">
+                {record.user.email}
+              </span>
+            </div>
           </div>
-          <div className="flex flex-col">
-            <span className="text-sm font-medium text-gray-800 dark:text-white/90">
-              {record.user.username}
-            </span>
-            <span className="text-xs text-gray-500 dark:text-gray-400">
-              {record.user.email}
-            </span>
-          </div>
-        </div>
-      ),
+        );
+      },
     },
     {
       key: 'itemCount',

@@ -3,11 +3,15 @@
 import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { useQueryClient } from '@tanstack/react-query';
+import { DataTable, Column } from '@/components/ui/table';
+import Badge from '@/components/ui/badge/Badge';
 import Button from '@/components/ui/button/Button';
 import Input from '@/components/form/input/InputField';
 import Label from '@/components/form/Label';
-import Badge from '@/components/ui/badge/Badge';
+import Checkbox from '@/components/form/input/Checkbox';
 import { Modal } from '@/components/ui/modal';
+import { PencilIcon, SearchIcon, PlusIcon, TrashBinIcon } from '@/icons';
+import Breadcrumb from '@/components/ui/breadcrumb/Breadcrumb';
 import {
   useProductTypesQuery,
   PRODUCT_TYPES_QUERY_KEY,
@@ -18,45 +22,62 @@ import {
   useDeleteProductType,
 } from '@/hooks/useProductTypeMutation';
 import { ProductTypeDto } from '@/types/product-type/product-type.dto';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
 
 export default function ProductTypePage() {
   const queryClient = useQueryClient();
-  const [search, setSearch] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
   const [page, setPage] = useState(1);
-  const limit = 10;
+  const pageSize = 10;
+  const [sortConfig, setSortConfig] = useState<{
+    key: string;
+    direction: 'asc' | 'desc';
+  } | null>(null);
 
   // Modal states
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedType, setSelectedType] = useState<ProductTypeDto | null>(null);
-  const [typeName, setTypeName] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formData, setFormData] = useState({
+    name: '',
+    isActive: true,
+  });
 
-  // Debounce search
+  // Debounce search input
   useEffect(() => {
     const timer = setTimeout(() => {
-      setDebouncedSearch(search);
+      setDebouncedSearch(searchTerm);
       setPage(1);
     }, 500);
     return () => clearTimeout(timer);
-  }, [search]);
+  }, [searchTerm]);
+
+  // Map column keys to sortBy
+  const mapColumnKeyToSortBy = (
+    key: string
+  ): 'name' | 'createdAt' | 'updatedAt' | undefined => {
+    const mapping: Record<string, 'name' | 'createdAt' | 'updatedAt'> = {
+      name: 'name',
+      createdAt: 'createdAt',
+      updatedAt: 'updatedAt',
+    };
+    return mapping[key];
+  };
+
+  // Handle sort change
+  const handleSortChange = (key: string, direction: 'asc' | 'desc') => {
+    setSortConfig({ key, direction });
+    setPage(1);
+  };
 
   // Fetch product types
-  const { data, isLoading } = useProductTypesQuery({
+  const { data, isLoading, isError, error } = useProductTypesQuery({
     search: debouncedSearch || undefined,
     page,
-    limit,
-    sortBy: 'createdAt',
-    sortOrder: 'desc',
+    limit: pageSize,
+    sortBy: sortConfig ? mapColumnKeyToSortBy(sortConfig.key) : 'createdAt',
+    sortOrder: sortConfig?.direction || 'desc',
   });
 
   const createMutation = useCreateProductType();
@@ -64,77 +85,78 @@ export default function ProductTypePage() {
   const deleteMutation = useDeleteProductType();
 
   const productTypes = data?.data || [];
-  const totalPages = data?.paging?.totalPages || 1;
 
   const handleCreate = async () => {
-    if (!typeName.trim()) {
+    if (!formData.name.trim()) {
       toast.error('Please enter a type name');
       return;
     }
 
-    setIsSubmitting(true);
     try {
-      await createMutation.mutateAsync({ name: typeName.trim() });
+      await createMutation.mutateAsync({ name: formData.name.trim() });
       queryClient.invalidateQueries({ queryKey: [PRODUCT_TYPES_QUERY_KEY] });
       setIsCreateModalOpen(false);
-      setTypeName('');
+      setFormData({ name: '', isActive: true });
       toast.success('Product type created successfully!');
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error creating product type:', error);
-      toast.error('Failed to create product type');
-    } finally {
-      setIsSubmitting(false);
+      toast.error(
+        error?.response?.data?.message || 'Failed to create product type'
+      );
     }
   };
 
   const handleEdit = async () => {
-    if (!typeName.trim() || !selectedType) {
+    if (!formData.name.trim() || !selectedType) {
       toast.error('Please enter a type name');
       return;
     }
 
-    setIsSubmitting(true);
     try {
       await updateMutation.mutateAsync({
         id: selectedType.id,
-        data: { name: typeName.trim() },
+        data: {
+          name: formData.name.trim(),
+          isActive: formData.isActive,
+        },
       });
       queryClient.invalidateQueries({ queryKey: [PRODUCT_TYPES_QUERY_KEY] });
       setIsEditModalOpen(false);
-      setTypeName('');
+      setFormData({ name: '', isActive: true });
       setSelectedType(null);
       toast.success('Product type updated successfully!');
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error updating product type:', error);
-      toast.error('Failed to update product type');
-    } finally {
-      setIsSubmitting(false);
+      toast.error(
+        error?.response?.data?.message || 'Failed to update product type'
+      );
     }
   };
 
   const handleDelete = async () => {
     if (!selectedType) return;
 
-    setIsSubmitting(true);
     try {
       await deleteMutation.mutateAsync(selectedType.id);
       queryClient.invalidateQueries({ queryKey: [PRODUCT_TYPES_QUERY_KEY] });
       setIsDeleteModalOpen(false);
       setSelectedType(null);
       toast.success('Product type deleted successfully!');
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error deleting product type:', error);
       toast.error(
-        'Failed to delete product type. It may have associated products.'
+        error?.response?.data?.message ||
+          'Failed to delete product type. It may have associated products.'
       );
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
   const openEditModal = (type: ProductTypeDto) => {
     setSelectedType(type);
-    setTypeName(type.name);
+    setFormData({
+      name: type.name,
+      isActive: type.isActive,
+    });
     setIsEditModalOpen(true);
   };
 
@@ -143,206 +165,205 @@ export default function ProductTypePage() {
     setIsDeleteModalOpen(true);
   };
 
+  // Define columns for DataTable
+  const columns: Column<ProductTypeDto>[] = [
+    {
+      key: 'name',
+      title: 'Type Name',
+      dataIndex: 'name',
+      sorter: true,
+      width: '30%',
+      render: (value: string) => (
+        <span className="font-medium text-gray-800 dark:text-white/90">
+          {value}
+        </span>
+      ),
+    },
+    {
+      key: 'productCount',
+      title: 'Products',
+      dataIndex: 'productCount',
+      width: '15%',
+      render: (value: number) => (
+        <Badge size="sm" color="primary">
+          {value ?? 0}
+        </Badge>
+      ),
+    },
+    {
+      key: 'isActive',
+      title: 'Status',
+      dataIndex: 'isActive',
+      width: '15%',
+      render: (value: boolean) => (
+        <Badge size="sm" color={value ? 'success' : 'error'}>
+          {value ? 'Active' : 'Inactive'}
+        </Badge>
+      ),
+    },
+    {
+      key: 'createdAt',
+      title: 'Created At',
+      dataIndex: 'createdAt',
+      sorter: true,
+      width: '20%',
+      render: (value: string) => (
+        <span className="text-sm text-gray-600 dark:text-gray-400">
+          {new Date(value).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+          })}
+        </span>
+      ),
+    },
+    {
+      key: 'actions',
+      title: 'Actions',
+      align: 'center',
+      width: '20%',
+      render: (_: any, record: ProductTypeDto) => (
+        <div className="flex items-center justify-center gap-2">
+          <Button
+            size="sm"
+            variant="primary"
+            startIcon={<PencilIcon />}
+            onClick={() => openEditModal(record)}
+          >
+            Edit
+          </Button>
+          <Button
+            size="sm"
+            variant="outline"
+            startIcon={<TrashBinIcon />}
+            onClick={() => openDeleteModal(record)}
+            className="text-red-600 hover:border-red-600 hover:text-red-700 dark:text-red-400"
+          >
+            Delete
+          </Button>
+        </div>
+      ),
+    },
+  ];
+
   return (
     <div>
-      <div className="mb-5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <h2 className="text-2xl font-semibold text-gray-800 dark:text-white/90">
-          Product Types
-        </h2>
+      {/* Breadcrumb Navigation */}
+      <Breadcrumb />
+
+      {/* Page Title and Description */}
+      <div className="mb-6">
+        <h1 className="text-2xl font-semibold text-gray-800 dark:text-white/90">
+          Product Type Management
+        </h1>
+        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+          Manage product categories and types for your marketplace.
+        </p>
+      </div>
+
+      {/* Search and Actions Bar */}
+      <div className="mb-5 flex items-center justify-between gap-4">
+        {/* Search Input */}
+        <div className="relative max-w-xs flex-1">
+          <SearchIcon className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-400" />
+          <input
+            type="text"
+            placeholder="Search product types..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="focus:border-brand-500 focus:ring-brand-500 w-full rounded-lg border border-gray-200 bg-white py-2 pr-4 pl-10 text-sm text-gray-800 placeholder-gray-400 transition focus:ring-1 focus:outline-none dark:border-white/[0.05] dark:bg-white/[0.03] dark:text-white/90 dark:placeholder-gray-500"
+          />
+        </div>
+
+        {/* Action Buttons */}
         <Button
           variant="primary"
+          size="sm"
+          startIcon={<PlusIcon />}
           onClick={() => {
-            setTypeName('');
+            setFormData({ name: '', isActive: true });
             setIsCreateModalOpen(true);
           }}
         >
-          + Add Product Type
+          Add Product Type
         </Button>
       </div>
 
-      {/* Search */}
-      <div className="mb-5 rounded-2xl border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-white/[0.03]">
-        <div className="max-w-md">
-          <Input
-            type="text"
-            placeholder="Search product types..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
+      {/* Error State */}
+      {isError && (
+        <div className="mb-4 rounded-lg border border-red-200 bg-red-50 p-4 dark:border-red-800 dark:bg-red-900/20">
+          <p className="text-sm text-red-600 dark:text-red-400">
+            Error loading product types: {error?.message || 'Unknown error'}
+          </p>
         </div>
-      </div>
+      )}
 
-      {/* Table */}
-      <div className="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
-        <div className="overflow-x-auto">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableCell isHeader className="min-w-[200px]">
-                  Name
-                </TableCell>
-                <TableCell isHeader className="min-w-[120px]">
-                  Products
-                </TableCell>
-                <TableCell isHeader className="min-w-[150px]">
-                  Created At
-                </TableCell>
-                <TableCell isHeader className="min-w-[100px]">
-                  Actions
-                </TableCell>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {isLoading ? (
-                <TableRow>
-                  <TableCell colSpan={4} className="text-center py-8">
-                    <p className="text-gray-500 dark:text-gray-400">
-                      Loading...
-                    </p>
-                  </TableCell>
-                </TableRow>
-              ) : productTypes.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={4} className="text-center py-8">
-                    <p className="text-gray-500 dark:text-gray-400">
-                      No product types found
-                    </p>
-                  </TableCell>
-                </TableRow>
-              ) : (
-                productTypes.map((type) => (
-                  <TableRow key={type.id}>
-                    <TableCell>
-                      <span className="font-medium text-gray-800 dark:text-white/90">
-                        {type.name}
-                      </span>
-                    </TableCell>
-                    <TableCell>
-                      <Badge size="sm" color="primary">
-                        {type.productCount ?? 0} products
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <span className="text-sm text-gray-600 dark:text-gray-400">
-                        {new Date(type.createdAt).toLocaleDateString()}
-                      </span>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        <button
-                          onClick={() => openEditModal(type)}
-                          className="text-blue-500 hover:text-blue-700"
-                          title="Edit"
-                        >
-                          <svg
-                            className="h-5 w-5"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                            />
-                          </svg>
-                        </button>
-                        <button
-                          onClick={() => openDeleteModal(type)}
-                          className="text-red-500 hover:text-red-700"
-                          title="Delete"
-                        >
-                          <svg
-                            className="h-5 w-5"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                            />
-                          </svg>
-                        </button>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
-        </div>
-
-        {/* Pagination */}
-        {totalPages > 1 && (
-          <div className="flex items-center justify-between border-t border-gray-200 px-5 py-4 dark:border-gray-800">
-            <p className="text-sm text-gray-600 dark:text-gray-400">
-              Page {page} of {totalPages}
-            </p>
-            <div className="flex gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setPage((p) => Math.max(1, p - 1))}
-                disabled={page === 1}
-              >
-                Previous
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                disabled={page === totalPages}
-              >
-                Next
-              </Button>
-            </div>
-          </div>
-        )}
-      </div>
+      {/* DataTable */}
+      <DataTable
+        columns={columns}
+        data={productTypes}
+        loading={isLoading}
+        pagination={
+          data?.paging
+            ? {
+                current: page,
+                pageSize: pageSize,
+                total: data.paging.total,
+                totalPages: data.paging.totalPages,
+                onChange: setPage,
+              }
+            : false
+        }
+        sortConfig={sortConfig}
+        onSortChange={handleSortChange}
+        emptyText="No product types found. Try adjusting your search criteria."
+      />
 
       {/* Create Modal */}
       <Modal
         isOpen={isCreateModalOpen}
         onClose={() => {
           setIsCreateModalOpen(false);
-          setTypeName('');
+          setFormData({ name: '', isActive: true });
         }}
         className="max-w-md p-6"
       >
         <h3 className="mb-4 text-lg font-semibold text-gray-800 dark:text-white">
           Create Product Type
         </h3>
-        <div className="mb-4">
-          <Label>Type Name *</Label>
-          <Input
-            type="text"
-            placeholder="Enter product type name"
-            value={typeName}
-            onChange={(e) => setTypeName(e.target.value)}
-            required
-          />
+        <div className="space-y-4">
+          <div>
+            <Label>
+              Type Name <span className="text-red-500">*</span>
+            </Label>
+            <Input
+              type="text"
+              placeholder="e.g., Clothing, Electronics"
+              value={formData.name}
+              onChange={(e) =>
+                setFormData({ ...formData, name: e.target.value })
+              }
+              required
+            />
+          </div>
         </div>
-        <div className="flex justify-end gap-3">
+        <div className="mt-6 flex justify-end gap-3">
           <Button
             variant="outline"
             onClick={() => {
               setIsCreateModalOpen(false);
-              setTypeName('');
+              setFormData({ name: '', isActive: true });
             }}
-            disabled={isSubmitting}
+            disabled={createMutation.isPending}
           >
             Cancel
           </Button>
           <Button
             variant="primary"
             onClick={handleCreate}
-            disabled={isSubmitting || !typeName.trim()}
+            disabled={createMutation.isPending || !formData.name.trim()}
           >
-            {isSubmitting ? 'Creating...' : 'Create'}
+            {createMutation.isPending ? 'Creating...' : 'Create'}
           </Button>
         </div>
       </Modal>
@@ -352,7 +373,7 @@ export default function ProductTypePage() {
         isOpen={isEditModalOpen}
         onClose={() => {
           setIsEditModalOpen(false);
-          setTypeName('');
+          setFormData({ name: '', isActive: true });
           setSelectedType(null);
         }}
         className="max-w-md p-6"
@@ -360,34 +381,54 @@ export default function ProductTypePage() {
         <h3 className="mb-4 text-lg font-semibold text-gray-800 dark:text-white">
           Edit Product Type
         </h3>
-        <div className="mb-4">
-          <Label>Type Name *</Label>
-          <Input
-            type="text"
-            placeholder="Enter product type name"
-            value={typeName}
-            onChange={(e) => setTypeName(e.target.value)}
-            required
-          />
+        <div className="space-y-4">
+          <div>
+            <Label>
+              Type Name <span className="text-red-500">*</span>
+            </Label>
+            <Input
+              type="text"
+              placeholder="e.g., Clothing, Electronics"
+              value={formData.name}
+              onChange={(e) =>
+                setFormData({ ...formData, name: e.target.value })
+              }
+              required
+            />
+          </div>
+          <div>
+            <div className="flex items-center gap-3">
+              <Checkbox
+                checked={formData.isActive}
+                onChange={(checked) =>
+                  setFormData({ ...formData, isActive: checked })
+                }
+              />
+              <Label className="mb-0">Active</Label>
+            </div>
+            <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+              Inactive types won&apos;t be available for new products
+            </p>
+          </div>
         </div>
-        <div className="flex justify-end gap-3">
+        <div className="mt-6 flex justify-end gap-3">
           <Button
             variant="outline"
             onClick={() => {
               setIsEditModalOpen(false);
-              setTypeName('');
+              setFormData({ name: '', isActive: true });
               setSelectedType(null);
             }}
-            disabled={isSubmitting}
+            disabled={updateMutation.isPending}
           >
             Cancel
           </Button>
           <Button
             variant="primary"
             onClick={handleEdit}
-            disabled={isSubmitting || !typeName.trim()}
+            disabled={updateMutation.isPending || !formData.name.trim()}
           >
-            {isSubmitting ? 'Saving...' : 'Save Changes'}
+            {updateMutation.isPending ? 'Saving...' : 'Save Changes'}
           </Button>
         </div>
       </Modal>
@@ -409,11 +450,13 @@ export default function ProductTypePage() {
           action cannot be undone.
         </p>
         {selectedType?.productCount && selectedType.productCount > 0 && (
-          <p className="mb-4 text-sm text-orange-600 dark:text-orange-400">
-            Warning: This type has {selectedType.productCount} associated
-            products. You cannot delete it until all products are removed or
-            reassigned.
-          </p>
+          <div className="mb-4 rounded-lg border border-orange-200 bg-orange-50 p-3 dark:border-orange-800 dark:bg-orange-900/20">
+            <p className="text-sm text-orange-600 dark:text-orange-400">
+              <strong>Warning:</strong> This type has{' '}
+              {selectedType.productCount} associated products. Deleting it may
+              fail if products are still using this type.
+            </p>
+          </div>
         )}
         <div className="flex justify-end gap-3">
           <Button
@@ -422,17 +465,17 @@ export default function ProductTypePage() {
               setIsDeleteModalOpen(false);
               setSelectedType(null);
             }}
-            disabled={isSubmitting}
+            disabled={deleteMutation.isPending}
           >
             Cancel
           </Button>
           <Button
             variant="primary"
             onClick={handleDelete}
-            disabled={isSubmitting}
-            className="bg-red-500 hover:bg-red-600"
+            disabled={deleteMutation.isPending}
+            className="bg-red-500 hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700"
           >
-            {isSubmitting ? 'Deleting...' : 'Delete'}
+            {deleteMutation.isPending ? 'Deleting...' : 'Delete'}
           </Button>
         </div>
       </Modal>

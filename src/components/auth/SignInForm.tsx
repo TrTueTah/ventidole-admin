@@ -4,6 +4,7 @@ import Input from '@/components/form/input/InputField';
 import Label from '@/components/form/Label';
 import { EyeCloseIcon, EyeIcon } from '@/icons';
 import { useLogin } from '@/hooks/useAuthQuery';
+import { useCurrentUser } from '@/hooks/useCurrentUser';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useState } from 'react';
@@ -18,6 +19,7 @@ export default function SignInForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const loginMutation = useLogin();
+  const { refetch: refetchCurrentUser } = useCurrentUser();
 
   const handleSignIn = (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,14 +35,19 @@ export default function SignInForm() {
     loginMutation.mutate(
       { email, password },
       {
-        onSuccess: () => {
+        onSuccess: async () => {
+          // Fetch and store current user data
+          await refetchCurrentUser();
+
           // After successful authentication, redirect to the original page or dashboard
           const redirectTo = searchParams.get('redirect') || '/';
           router.push(redirectTo);
         },
         onError: (error) => {
           // Display error message from API or generic message
-          const errorData = error.response?.data as { message?: string } | undefined;
+          const errorData = error.response?.data as
+            | { message?: string }
+            | undefined;
           const message =
             errorData?.message ||
             error.message ||
@@ -109,7 +116,7 @@ export default function SignInForm() {
                     </span>
                   </div>
                 </div>
-                <div className="flex items-center justify-between">
+                {/* <div className="flex items-center justify-end">
                   <div className="flex items-center gap-3">
                     <Checkbox checked={isChecked} onChange={setIsChecked} />
                     <span className="text-theme-sm block font-normal text-gray-700 dark:text-gray-400">
@@ -122,7 +129,7 @@ export default function SignInForm() {
                   >
                     Forgot password?
                   </Link>
-                </div>
+                </div> */}
                 <div>
                   <button
                     type="submit"
@@ -135,7 +142,7 @@ export default function SignInForm() {
               </div>
             </form>
 
-            <div className="mt-5">
+            {/* <div className="mt-5">
               <p className="text-center text-sm font-normal text-gray-700 sm:text-start dark:text-gray-400">
                 Don&apos;t have an account? {''}
                 <Link
@@ -145,7 +152,7 @@ export default function SignInForm() {
                   Sign Up
                 </Link>
               </p>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

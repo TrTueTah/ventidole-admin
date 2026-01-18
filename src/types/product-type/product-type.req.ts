@@ -12,4 +12,5 @@ export type CreateProductTypeREQ = {
 
 export type UpdateProductTypeREQ = {
   name?: string;
+  isActive?: boolean;
 };

@@ -129,7 +129,7 @@ const refreshToken = async () => {
     if (!token || !refreshToken) throw new Error('Missing tokens');
 
     const res = await axios.post(
-      `${process.env.NEXT_PUBLIC_API_URL}/v1/admin/authentication/refresh-token`,
+      `${process.env.NEXT_PUBLIC_API_URL}/v1/auth/refresh-token`,
       {
         token,
         refreshToken,
