@@ -4,7 +4,6 @@ import Input from '@/components/form/input/InputField';
 import Label from '@/components/form/Label';
 import { EyeCloseIcon, EyeIcon } from '@/icons';
 import { useLogin } from '@/hooks/useAuthQuery';
-import { useCurrentUser } from '@/hooks/useCurrentUser';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useState } from 'react';
@@ -19,7 +18,6 @@ export default function SignInForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const loginMutation = useLogin();
-  const { refetch: refetchCurrentUser } = useCurrentUser();
 
   const handleSignIn = (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,11 +33,9 @@ export default function SignInForm() {
     loginMutation.mutate(
       { email, password },
       {
-        onSuccess: async () => {
-          // Fetch and store current user data
-          await refetchCurrentUser();
-
+        onSuccess: () => {
           // After successful authentication, redirect to the original page or dashboard
+          // The admin layout will automatically fetch current user data
           const redirectTo = searchParams.get('redirect') || '/';
           router.push(redirectTo);
         },
