@@ -188,7 +188,7 @@ export default function BannerPage() {
       dataIndex: 'isActive',
       width: '10%',
       render: (value: boolean) => (
-        <Badge size="sm" color={value ? 'success' : 'gray'}>
+        <Badge size="sm" color={value ? 'success' : 'light'}>
           {value ? 'Yes' : 'No'}
         </Badge>
       ),

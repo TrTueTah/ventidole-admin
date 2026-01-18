@@ -31,12 +31,13 @@ export default function OrderDetailPage() {
       OrderStatus,
       'success' | 'warning' | 'error' | 'dark'
     > = {
-      [OrderStatus.PENDING]: 'warning',
-      [OrderStatus.PROCESSING]: 'dark',
-      [OrderStatus.SHIPPED]: 'dark',
+      [OrderStatus.PENDING_PAYMENT]: 'warning',
+      [OrderStatus.CONFIRMED]: 'dark',
+      [OrderStatus.PAID]: 'success',
+      [OrderStatus.SHIPPING]: 'dark',
       [OrderStatus.DELIVERED]: 'success',
-      [OrderStatus.CANCELLED]: 'error',
-      [OrderStatus.REFUNDED]: 'error',
+      [OrderStatus.CANCELED]: 'error',
+      [OrderStatus.EXPIRED]: 'error',
     };
     return colorMap[status] || 'dark';
   };

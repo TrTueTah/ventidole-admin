@@ -1,4 +1,14 @@
-import { CreatedIdolDto, IdolDto } from './user.dto';
+// TODO: Define IdolDto and CreatedIdolDto types if needed
+
+export type IdolDto = {
+  id: string;
+  name: string;
+};
+
+export type CreatedIdolDto = {
+  id: string;
+  name: string;
+};
 
 export type IdolListRESP = IdolDto;
 

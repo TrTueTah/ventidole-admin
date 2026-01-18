@@ -40,8 +40,9 @@ export default function SignInForm() {
         },
         onError: (error) => {
           // Display error message from API or generic message
+          const errorData = error.response?.data as { message?: string } | undefined;
           const message =
-            error.response?.data?.message ||
+            errorData?.message ||
             error.message ||
             'Login failed. Please check your credentials and try again.';
           setErrorMessage(message);

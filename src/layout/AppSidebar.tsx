@@ -94,6 +94,7 @@ const navItems: NavItem[] = [
     subItems: [
       { name: 'Shop', path: '/marketplace/shop', pro: false },
       { name: 'Product', path: '/marketplace/product', pro: false },
+      { name: 'Product Type', path: '/marketplace/product-type', pro: false },
       { name: 'Order', path: '/marketplace/order', pro: false },
     ],
   },
@@ -407,7 +408,7 @@ const AppSidebar: React.FC = () => {
             </div>
           </div>
         </nav>
-        {isExpanded || isHovered || isMobileOpen ? <SidebarWidget /> : null}
+        {/* {isExpanded || isHovered || isMobileOpen ? <SidebarWidget /> : null} */}
       </div>
     </aside>
   );

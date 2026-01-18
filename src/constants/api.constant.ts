@@ -35,6 +35,12 @@ export const ENDPOINTS = {
       return buildEndpoint(this._, path);
     },
   },
+  PRODUCT_TYPE: {
+    _: Endpoint.PRODUCT_TYPE,
+    get(path?: string | number) {
+      return buildEndpoint(this._, path);
+    },
+  },
   FILE: {
     _: Endpoint.FILE,
     UPLOAD: FileEndpoints.UPLOAD,

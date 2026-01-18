@@ -17,6 +17,26 @@ export type GetProductsREQ = {
   typeId?: string;
 } & PagingREQ;
 
+// Variant types
+export type CreateVariantREQ = {
+  name: string;
+  price: number;
+  stock: number;
+};
+
+export type UpdateVariantREQ = {
+  id?: string; // If provided, updates existing variant; if omitted, creates new
+  name: string;
+  price: number;
+  stock: number;
+  isActive?: boolean;
+};
+
+// Inline product type creation
+export type CreateProductTypeInlineREQ = {
+  name: string;
+};
+
 export type CreateProductREQ = {
   name: string;
   description?: string;
@@ -25,7 +45,18 @@ export type CreateProductREQ = {
   mediaUrls?: string[];
   shopId: string;
   typeId?: string;
-  isActive?: boolean;
+  newType?: CreateProductTypeInlineREQ;
+  variants?: CreateVariantREQ[];
 };
 
-export type UpdateProductREQ = Partial<CreateProductREQ>;
+export type UpdateProductREQ = {
+  name?: string;
+  description?: string;
+  price?: number;
+  stock?: number;
+  mediaUrls?: string[];
+  typeId?: string;
+  newType?: CreateProductTypeInlineREQ;
+  variants?: UpdateVariantREQ[];
+  isActive?: boolean;
+};

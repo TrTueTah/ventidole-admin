@@ -279,7 +279,7 @@ export default function ShopFormPage() {
             </Link>
             <Button
               variant="primary"
-              onClick={handleSubmit}
+              type="submit"
               disabled={isSubmitting}
             >
               {isSubmitting

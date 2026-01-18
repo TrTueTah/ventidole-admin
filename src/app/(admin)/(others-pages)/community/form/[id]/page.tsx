@@ -290,7 +290,7 @@ export default function CommunityFormPage() {
             </Link>
             <Button
               variant="primary"
-              onClick={handleSubmit}
+              type="submit"
               disabled={isSubmitting}
             >
               {isSubmitting

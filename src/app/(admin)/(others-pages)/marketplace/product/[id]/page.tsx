@@ -232,6 +232,72 @@ export default function ProductDetailPage() {
           </div>
         </div>
 
+        {/* Product Variants */}
+        {product.variants && product.variants.length > 0 && (
+          <div className="rounded-2xl border border-gray-200 bg-white p-5 lg:p-6 dark:border-gray-800 dark:bg-white/[0.03]">
+            <h4 className="mb-5 text-lg font-semibold text-gray-800 lg:mb-7 dark:text-white/90">
+              Product Variants ({product.variants.length})
+            </h4>
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[500px] table-auto">
+                <thead>
+                  <tr className="border-b border-gray-200 dark:border-gray-700">
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase dark:text-gray-400">
+                      Variant Name
+                    </th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase dark:text-gray-400">
+                      Price
+                    </th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase dark:text-gray-400">
+                      Stock
+                    </th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase dark:text-gray-400">
+                      Status
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {product.variants.map((variant) => (
+                    <tr
+                      key={variant.id}
+                      className="border-b border-gray-100 dark:border-gray-800"
+                    >
+                      <td className="px-4 py-3 text-sm font-medium text-gray-800 dark:text-white/90">
+                        {variant.name}
+                      </td>
+                      <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">
+                        ${variant.price.toFixed(2)}
+                      </td>
+                      <td className="px-4 py-3">
+                        <Badge
+                          size="sm"
+                          color={
+                            variant.stock > 10
+                              ? 'success'
+                              : variant.stock > 0
+                                ? 'warning'
+                                : 'error'
+                          }
+                        >
+                          {variant.stock}
+                        </Badge>
+                      </td>
+                      <td className="px-4 py-3">
+                        <Badge
+                          size="sm"
+                          color={variant.isActive ? 'success' : 'error'}
+                        >
+                          {variant.isActive ? 'Active' : 'Inactive'}
+                        </Badge>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
         {/* Product Images */}
         {product.mediaUrls && product.mediaUrls.length > 0 && (
           <div className="rounded-2xl border border-gray-200 bg-white p-5 lg:p-6 dark:border-gray-800 dark:bg-white/[0.03]">

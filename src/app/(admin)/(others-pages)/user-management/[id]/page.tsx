@@ -65,14 +65,18 @@ export default function UserDetailPage() {
         {/* Idol Profile Card */}
         <div className="rounded-2xl border border-gray-200 bg-white p-5 lg:p-6 dark:border-gray-800 dark:bg-white/[0.03]">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-start">
-            <div className="h-24 w-24 overflow-hidden rounded-full">
-              <Image
-                width={96}
-                height={96}
-                src={user.avatarUrl || '/images/user/user-01.png'}
-                alt={user.username}
-                className="h-full w-full object-cover"
-              />
+            <div className="bg-brand-500 flex h-24 w-24 items-center justify-center overflow-hidden rounded-full text-3xl font-semibold text-white">
+              {user.avatarUrl ? (
+                <Image
+                  width={96}
+                  height={96}
+                  src={user.avatarUrl}
+                  alt={user.username}
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                <span>{user.username?.charAt(0).toUpperCase()}</span>
+              )}
             </div>
             <div className="flex-1">
               <div className="mb-3 flex flex-wrap items-center gap-3">

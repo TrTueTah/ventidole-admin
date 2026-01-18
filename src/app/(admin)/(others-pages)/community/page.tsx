@@ -140,7 +140,7 @@ export default function CommunityManagementPage() {
       title: 'Actions',
       align: 'center',
       width: '11%',
-      render: (any: _, record: CommunityDto) => (
+      render: (_: unknown, record: CommunityDto) => (
         <div className="flex items-center justify-center gap-2">
           <Link href={`/community/${record.id}`}>
             <Button size="sm" variant="outline">

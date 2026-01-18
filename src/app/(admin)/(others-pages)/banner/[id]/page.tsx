@@ -89,7 +89,7 @@ export default function BannerDetailPage() {
                 >
                   {isBannerActive(banner) ? 'Active' : 'Inactive'}
                 </Badge>
-                <Badge size="sm" color={banner.isActive ? 'success' : 'gray'}>
+                <Badge size="sm" color={banner.isActive ? 'success' : 'light'}>
                   {banner.isActive ? 'Enabled' : 'Disabled'}
                 </Badge>
               </div>
@@ -208,7 +208,7 @@ export default function BannerDetailPage() {
               <p className="mb-2 text-xs text-gray-500 dark:text-gray-400">
                 Enabled
               </p>
-              <Badge size="sm" color={banner.isActive ? 'success' : 'gray'}>
+              <Badge size="sm" color={banner.isActive ? 'success' : 'light'}>
                 {banner.isActive ? 'Yes' : 'No'}
               </Badge>
             </div>

@@ -349,7 +349,7 @@ export default function UserFormPage() {
             </Link>
             <Button
               variant="primary"
-              onClick={handleSubmit}
+              type="submit"
               disabled={isSubmitting}
             >
               {isSubmitting

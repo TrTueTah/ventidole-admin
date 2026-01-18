@@ -12,6 +12,7 @@ import { useUsersQuery } from '@/hooks/useUsersQuery';
 import { UserDto } from '@/types/user/user.dto';
 import { UserSortBy } from '@/types/user/user.req';
 import { toast } from 'react-toastify';
+import { renderRoleBadge } from '@/helper/badge.helper';
 
 export default function UserManagementPage() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -81,24 +82,35 @@ export default function UserManagementPage() {
       dataIndex: 'username',
       sorter: true,
       width: '25%',
-      render: (value: string, record: UserDto) => (
-        <div className="flex items-center gap-3">
-          <div className="h-10 w-10 shrink-0 overflow-hidden rounded-full">
-            <Image
-              width={40}
-              height={40}
-              src={record.avatarUrl || '/images/user/user-01.png'}
-              alt={value}
-            />
+      render: (value: string, record: UserDto) => {
+        const firstChar = record.username?.charAt(0).toUpperCase();
+
+        return (
+          <div className="flex items-center gap-3">
+            {/* Avatar */}
+            <div className="bg-brand-500 flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full font-semibold text-white">
+              {record.avatarUrl ? (
+                <Image
+                  width={40}
+                  height={40}
+                  src={record.avatarUrl}
+                  alt={record.username}
+                />
+              ) : (
+                <span>{firstChar}</span>
+              )}
+            </div>
+
+            {/* Username */}
+            <Link
+              href={`/user-management/${record.id}`}
+              className="hover:text-brand-500 dark:hover:text-brand-400 truncate font-medium text-gray-800 transition dark:text-white/90"
+            >
+              {value}
+            </Link>
           </div>
-          <Link
-            href={`/user-management/${record.id}`}
-            className="hover:text-brand-500 dark:hover:text-brand-400 truncate font-medium text-gray-800 transition dark:text-white/90"
-          >
-            {value}
-          </Link>
-        </div>
-      ),
+        );
+      },
     },
     {
       key: 'email',
@@ -112,11 +124,7 @@ export default function UserManagementPage() {
       title: 'Role',
       sorter: true,
       width: '12%',
-      render: (_: any, record: UserDto) => (
-        <Badge size="sm" color="dark">
-          {record.role}
-        </Badge>
-      ),
+      render: (_: any, record: UserDto) => renderRoleBadge(record.role),
     },
     {
       key: 'isActive',
@@ -142,7 +150,7 @@ export default function UserManagementPage() {
       title: 'Actions',
       align: 'center',
       width: '14%',
-      render: (any: _, record: UserDto) => (
+      render: (_: unknown, record: UserDto) => (
         <div className="flex items-center justify-center gap-2">
           <Link href={`/user-management/${record.id}`}>
             <Button size="sm" variant="outline">
