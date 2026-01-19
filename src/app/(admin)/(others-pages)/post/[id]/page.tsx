@@ -85,25 +85,27 @@ export default function PostDetailPage() {
         {/* Post Content Card */}
         <div className="rounded-2xl border border-gray-200 bg-white p-5 lg:p-6 dark:border-gray-800 dark:bg-white/[0.03]">
           <div className="mb-5 flex items-start gap-4">
-            <div className="h-12 w-12 overflow-hidden rounded-full">
-              <Image
-                width={48}
-                height={48}
-                src={post.author.avatarUrl || '/images/user/user-01.png'}
-                alt={post.author.name}
-                className="h-full w-full object-cover"
-              />
+            <div className="bg-brand-500 flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full font-semibold text-white">
+              {post.author.avatarUrl ? (
+                <Image
+                  width={40}
+                  height={40}
+                  src={post.author.avatarUrl}
+                  alt={post.author.username || 'User Avatar'}
+                />
+              ) : (
+                <span>
+                  {post.author.username
+                    ? post.author.username.charAt(0).toUpperCase()
+                    : 'U'}
+                </span>
+              )}
             </div>
             <div className="flex-1">
               <div className="mb-1 flex items-center gap-3">
                 <h4 className="font-semibold text-gray-800 dark:text-white/90">
-                  {post.author.name}
+                  {post.author.username}
                 </h4>
-                {post.author.username && (
-                  <span className="text-sm text-gray-500 dark:text-gray-400">
-                    @{post.author.username}
-                  </span>
-                )}
                 <Badge size="sm" color={post.isActive ? 'success' : 'error'}>
                   {post.isActive ? 'Active' : 'Banned'}
                 </Badge>
@@ -209,7 +211,7 @@ export default function PostDetailPage() {
                 href={`/user-management/${post.author.id}`}
                 className="hover:text-brand-500 text-sm font-medium text-gray-800 transition dark:text-white/90"
               >
-                {post.author.name}
+                {post.author.username}
               </Link>
             </div>
             <div>

@@ -15,9 +15,14 @@ const getDefaultDates = () => {
   const start = new Date();
   start.setDate(start.getDate() - 30);
 
+  // Format for datetime-local input (YYYY-MM-DDTHH:MM)
+  const formatDateTimeLocal = (date: Date) => {
+    return date.toISOString().slice(0, 16);
+  };
+
   return {
-    startDate: start.toISOString().split('T')[0],
-    endDate: end.toISOString().split('T')[0],
+    startDate: formatDateTimeLocal(start),
+    endDate: formatDateTimeLocal(end),
   };
 };
 
@@ -159,12 +164,14 @@ export default function SocialAnalyticsPage() {
           value={startDate}
           onChange={setStartDate}
           max={endDate}
+          type="datetime-local"
         />
         <DatePicker
           label="End Date"
           value={endDate}
           onChange={setEndDate}
           min={startDate}
+          type="datetime-local"
         />
         <div>
           <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">

@@ -11,6 +11,7 @@ interface DatePickerProps {
   className?: string;
   min?: string;
   max?: string;
+  type?: 'date' | 'datetime-local';
 }
 
 export default function DatePicker({
@@ -21,6 +22,7 @@ export default function DatePicker({
   className = '',
   min,
   max,
+  type = 'date',
 }: DatePickerProps) {
   return (
     <div className={className}>
@@ -31,7 +33,7 @@ export default function DatePicker({
       )}
       <div className="relative">
         <input
-          type="date"
+          type={type}
           value={value}
           onChange={(e) => onChange(e.target.value)}
           min={min}

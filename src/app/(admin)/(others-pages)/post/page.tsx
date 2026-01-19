@@ -103,13 +103,21 @@ export default function PostManagementPage() {
       width: '18%',
       render: (_: any, record: PostDto) => (
         <div className="flex items-center gap-3">
-          <div className="h-10 w-10 shrink-0 overflow-hidden rounded-full">
-            <Image
-              width={40}
-              height={40}
-              src={record.authorAvatarUrl || '/images/user/user-01.png'}
-              alt={record.authorName || 'User'}
-            />
+          <div className="bg-brand-500 flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full font-semibold text-white">
+            {record.authorAvatarUrl ? (
+              <Image
+                width={40}
+                height={40}
+                src={record.authorAvatarUrl}
+                alt={record.authorName || 'User Avatar'}
+              />
+            ) : (
+              <span>
+                {record.authorName
+                  ? record.authorName.charAt(0).toUpperCase()
+                  : 'U'}
+              </span>
+            )}
           </div>
           <div className="min-w-0 flex-1">
             <p className="truncate font-medium text-gray-800 dark:text-white/90">

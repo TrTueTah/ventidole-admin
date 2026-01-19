@@ -180,17 +180,6 @@ export default function ProductTypePage() {
       ),
     },
     {
-      key: 'productCount',
-      title: 'Products',
-      dataIndex: 'productCount',
-      width: '15%',
-      render: (value: number) => (
-        <Badge size="sm" color="primary">
-          {value ?? 0}
-        </Badge>
-      ),
-    },
-    {
       key: 'isActive',
       title: 'Status',
       dataIndex: 'isActive',
