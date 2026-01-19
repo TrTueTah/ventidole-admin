@@ -131,7 +131,6 @@ export default function ShopFormPage() {
           description: formData.description,
           communityId: formData.communityId,
           avatarUrl,
-          isActive: formData.isActive,
         };
 
         await createMutation.mutateAsync(createData);
@@ -225,20 +224,22 @@ export default function ShopFormPage() {
                   onChange={handleInputChange}
                 />
               </div>
-              <div>
-                <Label>Status</Label>
-                <div className="flex items-center gap-3">
-                  <Switch
-                    checked={formData.isActive}
-                    onChange={(checked) =>
-                      handleSwitchChange('isActive', checked)
-                    }
-                  />
-                  <span className="text-sm text-gray-600 dark:text-gray-400">
-                    {formData.isActive ? 'Active' : 'Inactive'}
-                  </span>
+              {!isCreateMode && (
+                <div>
+                  <Label>Status</Label>
+                  <div className="flex items-center gap-3">
+                    <Switch
+                      checked={formData.isActive}
+                      onChange={(checked) =>
+                        handleSwitchChange('isActive', checked)
+                      }
+                    />
+                    <span className="text-sm text-gray-600 dark:text-gray-400">
+                      {formData.isActive ? 'Active' : 'Inactive'}
+                    </span>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </div>
 
